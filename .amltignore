@@ -1,0 +1,17 @@
+/2D-TAN/data/ActivityNet/activitynet_c3d_fc6_stride_1s.hdf5
+/2D-TAN/data/ActivityNet/cmcs_features.hdf5
+
+/2D-TAN/data/Charades-STA/charades_c3d_fc6_nonoverlap.hdf5
+/2D-TAN/data/Charades-STA/charades_vgg_rgb.hdf5
+/2D-TAN/data/Charades-STA/charades_i3d_rgb_25fps.hdf5
+/2D-TAN/data/Charades-STA/i3d_adam_epoch16_25fps.hdf5
+/2D-TAN/data/Charades-STA/vgg_rgb_features.hdf5
+
+/2D-TAN/data/TACoS/i3d_imagenet.hdf5
+/2D-TAN/data/TACoS/tacos_c3d_fc6_nonoverlap.hdf5
+/2D-TAN/data/TACoS/vgg_fc7.hdf5
+
+/2D-TAN/data/TACoS/.vector_cache
+/2D-TAN/release_checkpoints
+
+/VLG-Net

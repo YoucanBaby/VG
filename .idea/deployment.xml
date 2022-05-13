@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="FAREAST.v-yifangxu@localhost:12345" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="FAREAST.v-yifangxu@localhost:12345">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/v-yifangxu/Desktop/VG" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
