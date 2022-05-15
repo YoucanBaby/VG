@@ -47,7 +47,7 @@ def parse_args():
     parser.add_argument('--tag', help='tags shown in log', type=str)
     parser.add_argument('--mode', default='train', help='run test epoch only')
     parser.add_argument('--split', help='test split', type=str)
-    parser.add_argument('--no_save', default=False, action="store_true", help='don\'t save checkpoint', type=bool)
+    parser.add_argument('--no_save', default=True, action="store_true", help='don\'t save checkpoint')
     args = parser.parse_args()
 
     return args
