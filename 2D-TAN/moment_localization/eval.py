@@ -76,6 +76,24 @@ def display_results(result, title=None):
     return table.table
 
 
+def display_max_results(max_result, title=None):
+    '''返回最大结果表格'''
+    tious = cfg.TEST.TIOU
+    recalls = cfg.TEST.RECALL
+
+    display_data = [['R{}@{}'.format(i, j) for i in recalls for j in tious]]
+    display_data.append(
+        ['{:.02f}'.format(max_result[i][j][0] * 100) for j in range(len(recalls)) for i in range(len(tious))]
+    )
+    display_data.append(
+        ['{:.02f}'.format(max_result[i][j][1]) for j in range(len(recalls)) for i in range(len(tious))]
+    )
+    table = AsciiTable(display_data, title)
+    for i in range(len(tious) * len(recalls)):
+        table.justify_columns[i] = 'center'
+    return table.table
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Train localization network')
 

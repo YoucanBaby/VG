@@ -19,7 +19,6 @@ import eval
 from eval import nms
 from pathlib import Path
 
-
 from lib.datasets.dataset import MomentLocalizationDataset
 from lib.core.config import cfg, update_config
 from lib.core.utils import AverageMeter, create_logger
@@ -321,7 +320,7 @@ def train(cfg, verbose):
                              collate_fn=collate_fn)
 
     # [[score1, score2], [epoch1, epoch2]]
-    max_metrics = [[0, 0], [0, 0]]
+    max_metric = [[[0, 0], [0, 0]], [[0, 0], [0, 0]], [[0, 0], [0, 0]], [[0, 0], [0, 0]]]
     writer = SummaryWriter(tensorboard_dir)
 
     for cur_epoch in range(init_epoch, cfg.TRAIN.MAX_EPOCH):
@@ -336,28 +335,34 @@ def train(cfg, verbose):
             table_message += '\n' + eval.display_results(val_result, 'performance on validation set')
             writer.add_scalar('val_avg_loss', val_avg_loss, cur_epoch)
 
+        # test_result: {'ranks': [[R1@0.1, R5@0.1], [R1@0.3, R5@0.3], [R1@0.5, R5@0.5], [R1@0.7, R5@0.7]], 'mIoU': [mean IoU]}
         test_avg_loss, test_result = test_epoch(test_loader, model, verbose)
         loss_message += ' test loss: {:.4f}'.format(test_avg_loss)
         table_message += '\n' + eval.display_results(test_result, 'performance on testing set')
 
-        message = loss_message + table_message + '\n'
+        message = loss_message + table_message
         logger.info(message)
 
-        # save max metrics, and write tensorboard
+        # save max metrics and tensorboard
         if True:
-            if test_result['ranks'][0, 0] > max_metrics[0][0]:
-                max_metrics[0][0], max_metrics[1][0] = test_result['ranks'][0, 0], cur_epoch
+            tious = cfg.TEST.TIOU
+            recalls = cfg.TEST.RECALL
 
-            if test_result['ranks'][0, 1] > max_metrics[0][1]:
-                max_metrics[0][1], max_metrics[1][1] = test_result['ranks'][0, 1], cur_epoch
+            for i in range(len(recalls)):
+                for j in range(len(tious)):
+                    if test_result['ranks'][i, j] > max_metric[i][j][0]:
+                        max_metric[i][j][0], max_metric[i][j][1] = test_result['ranks'][i, j], cur_epoch
 
-            logger.info('Max R1@0.1 is {:.2f} in the {}th epoch'.format(max_metrics[0][0] * 100, max_metrics[1][0]))
-            logger.info('Max R5@0.1 is {:.2f} in the {}th epoch'.format(max_metrics[0][1] * 100, max_metrics[1][1]))
+            test_max_result = eval.display_max_results(max_metric, 'max score and epoch')
+            logger.info(test_max_result)
 
             writer.add_scalar('train_avg_loss', train_avg_loss, cur_epoch)
             writer.add_scalar('test_avg_loss', test_avg_loss, cur_epoch)
-            writer.add_scalar('R1@0.1', test_result['ranks'][0, 0], cur_epoch)
-            writer.add_scalar('R5@0.1', test_result['ranks'][0, 1], cur_epoch)
+            writer.add_scalar('mIoU', test_result['mIoU'], cur_epoch)
+
+            for i in range(len(recalls)):
+                for j in range(len(tious)):
+                    writer.add_scalar(f'R{recalls[i]}@{tious[j]}', test_result['ranks'][i, j], cur_epoch)
 
         # save model
         if not args.no_save:
