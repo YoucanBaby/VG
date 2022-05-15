@@ -29,7 +29,7 @@ OPTIM:
 TRAIN:
   BATCH_SIZE: 32
   MAX_EPOCH: 100
-  CONTINUE: True
+  CONTINUE: False
 
 LOSS:
   NAME: bce_rescale_loss

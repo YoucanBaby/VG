@@ -1,0 +1,36 @@
+description: 2d-tan
+
+target:
+  service: sing
+  name: msrresrchvc
+
+storage:
+  data:
+    storage_account_name: seaim
+    container_name: v-yifangxu
+
+environment:
+  image: v-yuczhao/vit:pytorch1.11.0
+  registry: msraimsouthcentralus.azurecr.io
+  username: msraimsouthcentralus
+  setup:
+    - pip install timm
+    - pip install ptflops
+
+code:
+  code_upload: True
+  local_dir: $CONFIG_DIR/../
+
+jobs:
+ - name: 2d-tan
+   sku: G8-V100
+   command:
+     - echo 123
+     - sleep 7d
+
+   submit_args:
+     container_args:
+       shm_size: 64g
+   sla_tier: premium  # Default: premium
+   execution_mode: basic  # Default: basic
+   priority: high  # Default: medium

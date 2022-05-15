@@ -33,11 +33,12 @@ jobs:
 #
 #     - cd /tmp/code
 #     - python -m torch.distributed.launch --nproc_per_node=8 --use_env main.py --model multi_cnn_small_v9 --batch-size 128 --data-path /tmp/dataset/ImageNet --data-set IMNET --output_dir $$AMLT_OUTPUT_DIR
-     - sleep 14d
+     - echo 123
+     - sleep 7d
 
    submit_args:
      container_args:
        shm_size: 64g
-   sla_tier: basic  # Def ault: premium
+   sla_tier: basic  # Default: premium
    execution_mode: basic  # Default: basic
    priority: high  # Default: medium
