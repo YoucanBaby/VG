@@ -210,9 +210,6 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
 
     for cur_iter, sample in enumerate(train_loader):
         loss_value, sorted_times = network(sample, model, optimizer)
-
-        return
-
         loss_meter.update(loss_value.item(), 1)
         sorted_segments_dict.update({idx: timestamp for idx, timestamp in zip(sample['batch_anno_idxs'], sorted_times)})
         if verbose:
