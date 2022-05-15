@@ -17,8 +17,8 @@ def bce_rescale_loss(scores, masks, targets, cfg):
     target_prob[target_prob > 1] = 1
     target_prob[target_prob < 0] = 0
 
-    print(scores[:,:,:target_prob.shape[2]])
-    print(target_prob)
+    # print(scores[:,:,:target_prob.shape[2]])
+    # print(target_prob)
 
     loss = F.binary_cross_entropy(scores[:,:,:target_prob.shape[2]], target_prob, reduction='none') * masks[:,:,:target_prob.shape[2]]
 
