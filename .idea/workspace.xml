@@ -5,54 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6e748b7-f8a2-455f-80c4-87f6006dbcf4" name="Changes" comment="2022.05.16">
-      <change afterPath="$PROJECT_DIR$/XYF/data/TACoS/merge_npys_to_hdf5.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/data/TACoS/test.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/data/TACoS/train.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/data/TACoS/val.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/experiments/tacos/MS-2D-TAN-G-C3D.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/experiments/tacos/MS-2D-TAN-G-I3D.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/experiments/tacos/MS-2D-TAN-G-VGG.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/experiments/tacos/XYF-v1.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/core/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/core/engine.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/core/eval.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/core/utils.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/datasets/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/datasets/activitynet.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/datasets/charades.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/datasets/dataset.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/datasets/tacos.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/datasets/transforms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/GTR.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/TAN.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/clip_modules/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/clip_modules/clip_pool.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/frame_modules/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/frame_modules/frame_pool.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/fusion_modules/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/fusion_modules/base_fusion.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/fusion_modules/video_text_fusion.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/loss.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/map_modules/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/map_modules/blocks.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/map_modules/map_conv.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/pred_modules/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/pred_modules/modules.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/prop_modules/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/prop_modules/dense.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/prop_modules/multiscale.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/lib/models/prop_modules/sparse.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/moment_localization/_init_paths.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/moment_localization/eval.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/moment_localization/run.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/tools/draw_heatmap.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/XYF/tools/split_testset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.amltignore" beforeDir="false" afterPath="$PROJECT_DIR$/.amltignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2D-TAN/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/moment_localization/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2D-TAN/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-I3D.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-I3D.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submit/msroctovc.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/submit/msroctovc.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,7 +89,7 @@
       <option name="presentableId" value="Default" />
       <updated>1652428585244</updated>
       <workItem from="1652428586523" duration="6589000" />
-      <workItem from="1652623297923" duration="19355000" />
+      <workItem from="1652623297923" duration="21067000" />
     </task>
     <task id="LOCAL-00001" summary="2022.05.13">
       <created>1652435168260</created>
@@ -190,7 +147,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652647751776</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="2022.05.16">
+      <created>1652665290678</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1652665290678</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

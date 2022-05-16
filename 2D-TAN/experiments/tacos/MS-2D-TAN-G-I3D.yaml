@@ -9,7 +9,7 @@ DATASET:
   DATA_DIR: data/TACoS
   VIS_INPUT_TYPE: i3d_imagenet
   TXT_INPUT_TYPE: glove
-  NO_VAL: False
+  NO_VAL: True
   NO_TEST: False
   INPUT_NUM_CLIPS: 64
   OUTPUT_NUM_CLIPS: [64, 32, 16]
