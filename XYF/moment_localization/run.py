@@ -48,6 +48,7 @@ def parse_args():
     parser.add_argument('--mode', default='train', help='run test epoch only')
     parser.add_argument('--split', help='test split', type=str)
     parser.add_argument('--no_save', default=True, action="store_true", help='don\'t save checkpoint')
+    parser.add_argument('--debug', default=False, type=bool)
     args = parser.parse_args()
 
     return args
@@ -66,6 +67,8 @@ def reset_config(config, args):
         config.LOG_DIR = args.logDir
     if args.tag:
         config.TAG = args.tag
+    if args.debug:
+        config.debug = args.debug
 
 
 def collate_fn(batch):
@@ -160,6 +163,12 @@ def network(sample, model, optimizer=None, return_map=False):
         optimizer.zero_grad()
         loss_value.backward()
         optimizer.step()
+
+    if cfg.debug:
+        print(type(predictions), predictions)
+        print(type(map_masks), map_masks)
+        print(type(sorted_times), sorted_times)
+        return
 
     if return_map:
         return loss_value, sorted_times, joint_prob.detach().cpu()
