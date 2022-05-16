@@ -86,7 +86,7 @@ def display_max_results(max_result, title=None):
         ['{:.02f}'.format(max_result[i][j][0] * 100) for j in range(len(recalls)) for i in range(len(tious))]
     )
     display_data.append(
-        ['{:.02f}'.format(max_result[i][j][1]) for j in range(len(recalls)) for i in range(len(tious))]
+        ['{}'.format(max_result[i][j][1]) for j in range(len(recalls)) for i in range(len(tious))]
     )
     table = AsciiTable(display_data, title)
     for i in range(len(tious) * len(recalls)):
