@@ -348,8 +348,8 @@ def train(cfg, verbose):
             tious = cfg.TEST.TIOU
             recalls = cfg.TEST.RECALL
 
-            for i in range(len(tious)):
-                for j in range(len(recalls)):
+            for i in range(len(recalls)):
+                for j in range(len(tious)):
                     if test_result['ranks'][i, j] > max_metric[i][j][0]:
                         max_metric[i][j][0], max_metric[i][j][1] = test_result['ranks'][i, j], cur_epoch
 
