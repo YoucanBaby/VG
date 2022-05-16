@@ -1,4 +1,4 @@
-WORKERS: 10
+WORKERS: 16
 
 MODEL_DIR: ./checkpoints
 RESULT_DIR: ./results
