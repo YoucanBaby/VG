@@ -4,16 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c6e748b7-f8a2-455f-80c4-87f6006dbcf4" name="Changes" comment="2022.05.16">
+    <list default="true" id="c6e748b7-f8a2-455f-80c4-87f6006dbcf4" name="Changes" comment="Config GTR Network">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/core/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/core/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/core/eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/core/eval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/datasets/tacos.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/datasets/tacos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/models/GTR.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/GTR.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/models/decoder/sequential.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/decoder/sequential.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/models/text_encoder/text_encoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/text_encoder/text_encoder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/models/visual_encoder/visual_encoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/visual_encoder/visual_encoder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2D-TAN/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/moment_localization/run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -98,7 +91,7 @@
       <option name="presentableId" value="Default" />
       <updated>1652428585244</updated>
       <workItem from="1652428586523" duration="6589000" />
-      <workItem from="1652623297923" duration="63640000" />
+      <workItem from="1652623297923" duration="65415000" />
     </task>
     <task id="LOCAL-00001" summary="2022.05.13">
       <created>1652435168260</created>
@@ -233,7 +226,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652721715016</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Config GTR Network">
+      <created>1652723486684</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1652723486684</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -253,6 +253,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="2022.05.13" />
     <MESSAGE value="2022.05.16" />
-    <option name="LAST_COMMIT_MESSAGE" value="2022.05.16" />
+    <MESSAGE value="Config GTR Network" />
+    <option name="LAST_COMMIT_MESSAGE" value="Config GTR Network" />
   </component>
 </project>
