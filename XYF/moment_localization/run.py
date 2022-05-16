@@ -165,9 +165,9 @@ def network(sample, model, optimizer=None, return_map=False):
         optimizer.step()
 
     if cfg.debug:
-        print(type(predictions), predictions)
-        print(type(map_masks), map_masks)
-        print(type(sorted_times), len(sorted_times))
+        print('predictions.shape: {}'.format(predictions.shape))
+        print('map_masks.shape: {}'.format(map_masks.shape))
+        print('len(sorted_times): {}'.format(len(sorted_times)))
         return
 
     if return_map:

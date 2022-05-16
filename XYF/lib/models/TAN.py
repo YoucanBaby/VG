@@ -33,6 +33,7 @@ class MultiScale_TAN(nn.Module):
             # clip_input.shape: [B, 4096, 384]
             clip_input = visual_input
 
+        # clip_input.shape: [B, 4096, 384],  visual_mask.shape: [B, 1, 384]
         # vis_h.shape: torch.Size([B, 512, 64]), clip_mask.shape: torch.Size([B, 1, 64])
         vis_h, clip_mask = self.clip_module(clip_input, visual_mask)
 
