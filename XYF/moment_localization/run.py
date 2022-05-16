@@ -14,6 +14,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
+from fvcore.nn import flop_count, FlopCountAnalysis, flop_count_str
 
 import eval
 from eval import nms
@@ -291,6 +292,18 @@ def train(cfg, verbose):
     model = torch.nn.DataParallel(model)
     model = model.to(device)
 
+    # print FLOPs and Parameters
+    if True:
+        video_feature_input = torch.zeros([1, 1024, 768], device=device)
+        text_feature_input = torch.zeros([1, 28, 300], device=device)
+        count_dict, *_ = flop_count(model, (video_feature_input, text_feature_input))
+        count = sum(count_dict.values())
+        n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+        logger.info(flop_count_str(FlopCountAnalysis(model, (video_feature_input, text_feature_input))))
+        logger.info('{:<30}  {:.1f} GFlops'.format('number of FLOPs: ', count))
+        logger.info('{:<30}  {:.1f} MB'.format('number of params: ', n_parameters / 1000 ** 2))
+
     if cfg.OPTIM.NAME == 'Adam':
         optimizer = optim.Adam(model.parameters(), lr=cfg.OPTIM.PARAMS.LR)
     elif cfg.OPTIM.NAME == 'SGD':
@@ -302,7 +315,7 @@ def train(cfg, verbose):
     else:
         raise NotImplementedError
 
-    # TODO 修改MomentLocalizationDataset
+    # TODO 修改MomentLocalizationDataset, 再修改loss function
     train_dataset = MomentLocalizationDataset(cfg.DATASET, 'train')
     train_loader = DataLoader(train_dataset,
                               batch_size=cfg.TRAIN.BATCH_SIZE,

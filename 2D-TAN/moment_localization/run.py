@@ -2,6 +2,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from fvcore.nn import flop_count, FlopCountAnalysis, flop_count_str
+
 import _init_paths
 import os
 import pprint
@@ -48,6 +50,7 @@ def parse_args():
     parser.add_argument('--mode', default='train', help='run test epoch only')
     parser.add_argument('--split', help='test split', type=str)
     parser.add_argument('--no_save', default=True, action="store_true", help='don\'t save checkpoint')
+    parser.add_argument('--debug', default=False, type=bool)
     args = parser.parse_args()
 
     return args
@@ -160,6 +163,11 @@ def network(sample, model, optimizer=None, return_map=False):
         optimizer.zero_grad()
         loss_value.backward()
         optimizer.step()
+
+    if cfg.debug:
+        print('visual_input.shape: {}'.format(visual_input.shape))
+        print('textual_input.shape: {}'.format(textual_input.shape))
+        return
 
     if return_map:
         return loss_value, sorted_times, joint_prob.detach().cpu()
@@ -281,6 +289,21 @@ def train(cfg, verbose):
     device = ("cuda" if torch.cuda.is_available() else "cpu")
     model = torch.nn.DataParallel(model)
     model = model.to(device)
+
+    # print FLOPs and Parameters
+    # if True:
+    #     video_feature = torch.zeros([1, 4096, 384], device=device)
+    #     video_mask = torch.zeros([1, 1, 384], device=device)
+    #     text_feature = torch.zeros([1, 25, 300], device=device)
+    #     text_mask = torch.zeros([1, 25, 1], device=device)
+    #
+    #     count_dict, *_ = flop_count(model, (text_feature, text_mask, video_feature, video_mask))
+    #     count = sum(count_dict.values())
+    #     n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    #
+    #     logger.info(flop_count_str(FlopCountAnalysis(model, (text_feature, text_mask, video_feature, video_mask))))
+    #     logger.info('{:<30}  {:.1f} GFlops'.format('number of FLOPs: ', count))
+    #     logger.info('{:<30}  {:.1f} MB'.format('number of params: ', n_parameters / 1000 ** 2))
 
     if cfg.OPTIM.NAME == 'Adam':
         optimizer = optim.Adam(model.parameters(), lr=cfg.OPTIM.PARAMS.LR)
