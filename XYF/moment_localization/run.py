@@ -348,8 +348,8 @@ def train(cfg, verbose):
             tious = cfg.TEST.TIOU
             recalls = cfg.TEST.RECALL
 
-            for i in range(len(recalls)):
-                for j in range(len(tious)):
+            for i in range(len(tious)):
+                for j in range(len(recalls)):
                     if test_result['ranks'][i, j] > max_metric[i][j][0]:
                         max_metric[i][j][0], max_metric[i][j][1] = test_result['ranks'][i, j], cur_epoch
 
@@ -360,9 +360,9 @@ def train(cfg, verbose):
             writer.add_scalar('test_avg_loss', test_avg_loss, cur_epoch)
             writer.add_scalar('mIoU', test_result['mIoU'], cur_epoch)
 
-            for i in range(len(recalls)):
-                for j in range(len(tious)):
-                    writer.add_scalar(f'R{recalls[i]}@{tious[j]}', test_result['ranks'][i, j], cur_epoch)
+            for i in range(len(tious)):
+                for j in range(len(recalls)):
+                    writer.add_scalar(f'R{recalls[j]}@{tious[i]}', test_result['ranks'][i, j], cur_epoch)
 
         # save model
         if not args.no_save:

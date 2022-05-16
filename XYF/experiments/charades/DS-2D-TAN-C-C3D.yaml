@@ -5,15 +5,15 @@ RESULT_DIR: ./results
 LOG_DIR: ./log
 
 DATASET:
-  NAME: tacos
-  DATA_DIR: data/TACoS
-  VIS_INPUT_TYPE: tacos_c3d_fc6_nonoverlap
+  NAME: charades
+  DATA_DIR: data/Charades-STA
+  VIS_INPUT_TYPE: charades_c3d_fc6_nonoverlap
   TXT_INPUT_TYPE: glove
   NO_VAL: True
   NO_TEST: False
   INPUT_NUM_CLIPS: 64
-  OUTPUT_NUM_CLIPS: [64, 32, 16]
-  NUM_ANCHORS: [16, 16, 16]
+  OUTPUT_NUM_CLIPS: [64]
+  NUM_ANCHORS: [64]
   TIME_UNIT: 1
   SLIDING_WINDOW: True
 
@@ -27,7 +27,7 @@ OPTIM:
     LR: 0.0001
 
 TRAIN:
-  BATCH_SIZE: 64
+  BATCH_SIZE: 32
   MAX_EPOCH: 100
   CONTINUE: False
 
@@ -40,17 +40,17 @@ LOSS:
     TEMPERATURE: 1.0
 
 TEST:
-  BATCH_SIZE: 64
+  BATCH_SIZE: 32
   RECALL: [1,5]
-  TIOU: [0.1,0.3,0.5,0.7]
+  TIOU: [0.5,0.7]
   NMS_THRESH: 0.49
 
 MODEL:
   NAME: MultiScale_TAN
   PARAMS:
-    NUM_SCALES: 3
+    NUM_SCALES: 1
 
-  CHECKPOINT: revision_checkpoints/tacos/MS-2D-TAN-G-C3D-H512N64K3A16k17L2/epoch0021-0.4924-0.7833.pkl
+  CHECKPOINT:
 
   CLIP_MODULE:
     NAME: ClipAvgPool
@@ -64,7 +64,7 @@ MODEL:
     NAME: MultiScalePropConvTanhBN
     PARAMS:
       HIDDEN_SIZE: 512
-      NUM_LAYERS: [16, 8, 8]
+      NUM_LAYERS: [64]
 
   FUSION_MODULE:
     NAME: MulNormFusion
@@ -79,7 +79,7 @@ MODEL:
         BIDIRECTIONAL: True
 
   MAP_MODULE:
-    NAME: MapGatedConv
+    NAME: Conv
     PARAMS:
       INPUT_SIZE: 512
       HIDDEN_SIZES: [512, 512]

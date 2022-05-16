@@ -5,16 +5,16 @@ RESULT_DIR: ./results
 LOG_DIR: ./log
 
 DATASET:
-  NAME: tacos
-  DATA_DIR: data/TACoS
-  VIS_INPUT_TYPE: tacos_c3d_fc6_nonoverlap
+  NAME: charades
+  DATA_DIR: data/Charades-STA
+  VIS_INPUT_TYPE: i3d_adam_epoch16_25fps
   TXT_INPUT_TYPE: glove
   NO_VAL: True
   NO_TEST: False
   INPUT_NUM_CLIPS: 64
   OUTPUT_NUM_CLIPS: [64, 32, 16]
   NUM_ANCHORS: [16, 16, 16]
-  TIME_UNIT: 1
+  TIME_UNIT: 0.64
   SLIDING_WINDOW: True
 
 CUDNN:
@@ -27,9 +27,9 @@ OPTIM:
     LR: 0.0001
 
 TRAIN:
-  BATCH_SIZE: 64
+  BATCH_SIZE: 32
   MAX_EPOCH: 100
-  CONTINUE: False
+  CONTINUE: True
 
 LOSS:
   NAME: bce_rescale_loss
@@ -40,9 +40,9 @@ LOSS:
     TEMPERATURE: 1.0
 
 TEST:
-  BATCH_SIZE: 64
+  BATCH_SIZE: 32
   RECALL: [1,5]
-  TIOU: [0.1,0.3,0.5,0.7]
+  TIOU: [0.5,0.7]
   NMS_THRESH: 0.49
 
 MODEL:
@@ -50,12 +50,12 @@ MODEL:
   PARAMS:
     NUM_SCALES: 3
 
-  CHECKPOINT: revision_checkpoints/tacos/MS-2D-TAN-G-C3D-H512N64K3A16k17L2/epoch0021-0.4924-0.7833.pkl
+  CHECKPOINT: release_checkpoints/charades/MS-2D-TAN-G-I3D-Finetuned/epoch0081-0.6008-0.8780.pkl
 
   CLIP_MODULE:
     NAME: ClipAvgPool
     PARAMS:
-      INPUT_SIZE: 4096
+      INPUT_SIZE: 1024
       HIDDEN_SIZE: 512
       KERNEL_SIZE: 1
       STRIDE: 1

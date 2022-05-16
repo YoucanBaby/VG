@@ -7,14 +7,14 @@ LOG_DIR: ./log
 DATASET:
   NAME: tacos
   DATA_DIR: data/TACoS
-  VIS_INPUT_TYPE: tacos_c3d_fc6_nonoverlap
+  VIS_INPUT_TYPE: i3d_imagenet
   TXT_INPUT_TYPE: glove
   NO_VAL: True
   NO_TEST: False
-  INPUT_NUM_CLIPS: 64
-  OUTPUT_NUM_CLIPS: [64, 32, 16]
-  NUM_ANCHORS: [16, 16, 16]
-  TIME_UNIT: 1
+  INPUT_NUM_CLIPS: 512
+  OUTPUT_NUM_CLIPS: [512, 256, 128, 64, 32]
+  NUM_ANCHORS: [8, 8, 8, 8, 8]
+  TIME_UNIT: 0.64
   SLIDING_WINDOW: True
 
 CUDNN:
@@ -48,14 +48,14 @@ TEST:
 MODEL:
   NAME: MultiScale_TAN
   PARAMS:
-    NUM_SCALES: 3
+    NUM_SCALES: 5
 
-  CHECKPOINT: revision_checkpoints/tacos/MS-2D-TAN-G-C3D-H512N64K3A16k17L2/epoch0021-0.4924-0.7833.pkl
+  CHECKPOINT: release_checkpoints/tacos/MS-2D-TAN-G-I3D-H512N512K5A8k9L2/epoch0065-0.5324-0.7748.pkl
 
   CLIP_MODULE:
     NAME: ClipAvgPool
     PARAMS:
-      INPUT_SIZE: 4096
+      INPUT_SIZE: 1024
       HIDDEN_SIZE: 512
       KERNEL_SIZE: 1
       STRIDE: 1
@@ -64,7 +64,7 @@ MODEL:
     NAME: MultiScalePropConvTanhBN
     PARAMS:
       HIDDEN_SIZE: 512
-      NUM_LAYERS: [16, 8, 8]
+      NUM_LAYERS: [8, 4, 4, 4, 4]
 
   FUSION_MODULE:
     NAME: MulNormFusion
@@ -83,9 +83,9 @@ MODEL:
     PARAMS:
       INPUT_SIZE: 512
       HIDDEN_SIZES: [512, 512]
-      KERNEL_SIZES: [17, 17]
+      KERNEL_SIZES: [9, 9]
       STRIDES: [1, 1]
-      PADDINGS: [8, 8]
+      PADDINGS: [4, 4]
       DILATIONS: [1, 1]
 
   PRED_MODULE:

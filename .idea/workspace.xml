@@ -5,8 +5,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6e748b7-f8a2-455f-80c4-87f6006dbcf4" name="Changes" comment="2022.05.16">
+      <change afterPath="$PROJECT_DIR$/XYF/data/ActivityNet/download.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/data/ActivityNet/test.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/data/ActivityNet/train.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/data/ActivityNet/val.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/data/Charades-STA/Charades_v1_test.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/data/Charades-STA/Charades_v1_train.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/data/Charades-STA/charades_sta_test.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/data/Charades-STA/charades_sta_train.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/data/Charades-STA/convert_vgg_features_to_hdf5.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/data/Charades-STA/download.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/data/Charades-STA/valid_videos.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/experiments/activitynet/MS-2D-TAN-G-C3D.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/experiments/activitynet/MS-2D-TAN-G-I3D.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/experiments/charades/DS-2D-TAN-C-C3D.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/experiments/charades/MS-2D-TAN-G-C3D.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/experiments/charades/MS-2D-TAN-G-I3D-Finetuned.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/experiments/charades/MS-2D-TAN-G-I3D.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/experiments/charades/MS-2D-TAN-G-VGG.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/experiments/tacos/MS-2D-TAN-G-C3D-H512N512K5A8k9L2.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/experiments/tacos/MS-2D-TAN-G-I3D-H512N512K5A8k9L2.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-VGG.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-VGG.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/MS-2D-TAN-G-C3D.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/MS-2D-TAN-G-C3D.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/MS-2D-TAN-G-I3D.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/MS-2D-TAN-G-I3D.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/MS-2D-TAN-G-VGG.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/MS-2D-TAN-G-VGG.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/moment_localization/eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/eval.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +112,7 @@
       <option name="presentableId" value="Default" />
       <updated>1652428585244</updated>
       <workItem from="1652428586523" duration="6589000" />
-      <workItem from="1652623297923" duration="24327000" />
+      <workItem from="1652623297923" duration="24990000" />
     </task>
     <task id="LOCAL-00001" summary="2022.05.13">
       <created>1652435168260</created>
@@ -179,7 +205,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652674306117</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="2022.05.16">
+      <created>1652676840344</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1652676840344</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -3,6 +3,7 @@ import torch.nn.functional as F
 from timm.models.vision_transformer import VisionTransformer
 
 
+
 def main():
     # input = torch.ones([2, 2])
     # mask = torch.zeros([2, 2], dtype=torch.bool)
@@ -19,13 +20,8 @@ def main():
     # print(target)
     # print(loss, torch.sum(loss))
     # print(loss_value)
-    x = torch.randn((3, 3))
-    mask = torch.tensor([
-            [0, 0, 0],
-            [0, 1, 1],
-            [0, 1, 1],
-    ])
-    output = VisionTransformer(x, mask=mask)
+    pass
+
 
 
 if __name__ == '__main__':
