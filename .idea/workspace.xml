@@ -9,10 +9,7 @@
       <change beforePath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-C3D-H512N512K5A8k9L2.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-C3D-H512N512K5A8k9L2.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-C3D.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-C3D.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-I3D-H512N512K5A8k9L2.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-I3D-H512N512K5A8k9L2.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-I3D.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-I3D.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-VGG.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-VGG.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2D-TAN/moment_localization/eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/moment_localization/eval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/submit/msroctovc.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/submit/msroctovc.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +89,7 @@
       <option name="presentableId" value="Default" />
       <updated>1652428585244</updated>
       <workItem from="1652428586523" duration="6589000" />
-      <workItem from="1652623297923" duration="22950000" />
+      <workItem from="1652623297923" duration="23381000" />
     </task>
     <task id="LOCAL-00001" summary="2022.05.13">
       <created>1652435168260</created>
@@ -171,7 +168,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652668209352</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="2022.05.16">
+      <created>1652673872948</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1652673872948</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
