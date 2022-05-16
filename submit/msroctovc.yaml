@@ -1,4 +1,4 @@
-description: 2d-tan-tacos-vgg-no-eval
+description: 2d-tan-tacos-c3d-eval
 
 target:
   service: sing
@@ -22,7 +22,7 @@ code:
   local_dir: $CONFIG_DIR/../
 
 jobs:
- - name: 2d-tan-tacos-vgg-no-eval
+ - name: 2d-tan-tacos-c3d-eval
    sku: G8-V100
    command:
      - cd /tmp/code/2D-TAN/data
@@ -31,7 +31,7 @@ jobs:
      - azcopy_linux_amd64_10.13.0/azcopy copy 'https://scim.blob.core.windows.net/v-yifangxu/Video Grounding/TACoS?sv=2020-10-02&st=2022-04-09T09%3A00%3A23Z&se=2023-06-10T09%3A00%3A00Z&sr=c&sp=rl&sig=giMpvZi75VZ063DbN2ZsuDo03Pp8581J%2BWHXl%2FfIjzU%3D' ./ --recursive
 
      - cd /tmp/code/2D-TAN
-     - python moment_localization/run.py --cfg experiments/tacos/MS-2D-TAN-G-VGG.yaml --logDir $$AMLT_OUTPUT_DIR --verbose --tag base
+     - python moment_localization/run.py --cfg experiments/tacos/MS-2D-TAN-G-C3D.yaml --logDir $$AMLT_OUTPUT_DIR --verbose --tag base
      - sleep 7d
 
    submit_args:

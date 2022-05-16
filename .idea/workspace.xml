@@ -5,10 +5,48 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6e748b7-f8a2-455f-80c4-87f6006dbcf4" name="Changes" comment="2022.05.16">
+      <change afterPath="$PROJECT_DIR$/XYF/lib/models/attention.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/lib/models/decoder/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/lib/models/decoder/sequential.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/lib/models/prediction/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/lib/models/prediction/ffn.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/lib/models/text_encoder/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/lib/models/text_encoder/text_encoder.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/lib/models/visual_encoder/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/XYF/lib/models/visual_encoder/visual_encoder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/VG.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/VG.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-VGG.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-VGG.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/models/TAN.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/TAN.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-C3D.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-C3D.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2D-TAN/lib/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/lib/models/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/MS-2D-TAN-G-I3D.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/MS-2D-TAN-G-I3D.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/XYF-v1.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/decoder/parallel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/core/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/core/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/datasets/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/datasets/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/datasets/transforms.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/datasets/transforms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/GTR.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/GTR.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/TAN.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/clip_modules/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/clip_modules/clip_pool.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/frame_modules/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/frame_modules/frame_pool.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/fusion_modules/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/fusion_modules/base_fusion.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/fusion_modules/video_text_fusion.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/loss.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/map_modules/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/map_modules/blocks.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/map_modules/map_conv.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/pred_modules/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/pred_modules/modules.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/prop_modules/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/prop_modules/dense.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/prop_modules/multiscale.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/prop_modules/sparse.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submit/msroctovc.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/submit/msroctovc.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +101,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/XYF" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/XYF/lib/models/gtr/text_encoder" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -72,9 +110,13 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\v-yifangxu\PycharmProjects\VG\XYF\lib\models\gtr\text_encoder" />
       <recent name="C:\Users\v-yifangxu\PycharmProjects\VG\XYF" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\v-yifangxu\PycharmProjects\VG\XYF\lib\models" />
+      <recent name="C:\Users\v-yifangxu\PycharmProjects\VG\XYF\lib\models\tan" />
+      <recent name="C:\Users\v-yifangxu\PycharmProjects\VG\XYF\lib\models\gtr" />
       <recent name="C:\Users\v-yifangxu\PycharmProjects\VG" />
       <recent name="C:\Users\v-yifangxu\PycharmProjects\VG\2D-TAN" />
     </key>
@@ -88,7 +130,7 @@
       <option name="presentableId" value="Default" />
       <updated>1652428585244</updated>
       <workItem from="1652428586523" duration="6589000" />
-      <workItem from="1652623297923" duration="28257000" />
+      <workItem from="1652623297923" duration="61761000" />
     </task>
     <task id="LOCAL-00001" summary="2022.05.13">
       <created>1652435168260</created>
@@ -209,7 +251,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652680161468</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="2022.05.16">
+      <created>1652680815267</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1652680815267</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

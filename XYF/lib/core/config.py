@@ -18,27 +18,6 @@ cfg.CUDNN.BENCHMARK = True
 cfg.CUDNN.DETERMINISTIC = False
 cfg.CUDNN.ENABLED = True
 
-# grounding model related params
-cfg.MODEL = edict()
-cfg.MODEL.NAME = ''
-cfg.MODEL.PARAMS = None
-cfg.MODEL.CHECKPOINT = '' # The checkpoint for the best performance
-cfg.MODEL.CLIP_MODULE = edict()
-cfg.MODEL.CLIP_MODULE.NAME = ''
-cfg.MODEL.CLIP_MODULE.PARAMS = None
-cfg.MODEL.PROP_MODULE = edict()
-cfg.MODEL.PROP_MODULE.NAME = ''
-cfg.MODEL.PROP_MODULE.PARAMS = None
-cfg.MODEL.FUSION_MODULE = edict()
-cfg.MODEL.FUSION_MODULE.NAME = ''
-cfg.MODEL.FUSION_MODULE.PARAMS = None
-cfg.MODEL.MAP_MODULE = edict()
-cfg.MODEL.MAP_MODULE.NAME = ''
-cfg.MODEL.MAP_MODULE.PARAMS = None
-cfg.MODEL.PRED_MODULE = edict()
-cfg.MODEL.PRED_MODULE.NAME = ''
-cfg.MODEL.PRED_MODULE.PARAMS = None
-
 # DATASET related params
 cfg.DATASET = edict()
 cfg.DATASET.DATA_DIR = ''
@@ -64,6 +43,24 @@ cfg.DATASET.QUERY_NUM_CLIPS = 8
 cfg.DATASET.FPS = 25
 cfg.DATASET.VIDEO_WINDOW_SIZE = 64
 
+# grounding model related params
+cfg.MODEL = edict()
+cfg.MODEL.NAME = ''
+cfg.MODEL.PARAMS = None
+cfg.MODEL.CHECKPOINT = ''  # The checkpoint for the best performance
+cfg.MODEL.VISUAL_ENCODER = edict()
+cfg.MODEL.VISUAL_ENCODER.NAME = ''
+cfg.MODEL.VISUAL_ENCODER.PARAMS = None
+cfg.MODEL.TEXT_ENCODER = edict()
+cfg.MODEL.TEXT_ENCODER.NAME = ''
+cfg.MODEL.TEXT_ENCODER.PARAMS = None
+cfg.MODEL.DECODER = edict()
+cfg.MODEL.DECODER.NAME = ''
+cfg.MODEL.DECODER.PARAMS = None
+cfg.MODEL.PREDICTION = edict()
+cfg.MODEL.PREDICTION.NAME = ''
+cfg.MODEL.PREDICTION.PARAMS = None
+
 # OPTIM
 cfg.OPTIM = edict()
 cfg.OPTIM.NAME = ''
@@ -73,8 +70,8 @@ cfg.OPTIM.SCHEDULER.FACTOR = 0.5
 cfg.OPTIM.SCHEDULER.PATIENCE = 500
 # train
 cfg.TRAIN = edict()
-cfg.TRAIN.MAX_EPOCH = 20
-cfg.TRAIN.BATCH_SIZE = 4
+cfg.TRAIN.MAX_EPOCH = 100
+cfg.TRAIN.BATCH_SIZE = 64
 cfg.TRAIN.SHUFFLE = True
 cfg.TRAIN.CONTINUE = False
 
@@ -91,21 +88,24 @@ cfg.TEST.BATCH_SIZE = 1
 cfg.TEST.TOP_K = 10
 cfg.TEST.EVAL_TRAIN = False
 
+
 def _update_dict(cfg, value):
     for k, v in value.items():
         if k in cfg:
             if 'PARAMS' in k:
                 cfg[k] = v
             elif isinstance(v, dict):
-                _update_dict(cfg[k],v)
+                _update_dict(cfg[k], v)
             else:
                 cfg[k] = v
         else:
             raise ValueError("{} not exist in config.py".format(k))
 
+
 def update_config(config_file):
     with open(config_file) as f:
         exp_config = edict(yaml.load(f, Loader=yaml.FullLoader))
+        print(exp_config.items())
         for k, v in exp_config.items():
             if k in cfg:
                 if isinstance(v, dict):

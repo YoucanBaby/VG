@@ -1,1 +1,1 @@
-from lib.models.TAN import *
+from .TAN import *

@@ -9,7 +9,7 @@ DATASET:
   DATA_DIR: data/TACoS
   VIS_INPUT_TYPE: tacos_c3d_fc6_nonoverlap
   TXT_INPUT_TYPE: glove
-  NO_VAL: True
+  NO_VAL: False
   NO_TEST: False
   INPUT_NUM_CLIPS: 64
   OUTPUT_NUM_CLIPS: [64, 32, 16]
@@ -27,7 +27,7 @@ OPTIM:
     LR: 0.0001
 
 TRAIN:
-  BATCH_SIZE: 64
+  BATCH_SIZE: 32
   MAX_EPOCH: 100
   CONTINUE: False
 
