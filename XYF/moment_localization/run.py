@@ -134,14 +134,15 @@ def upsample_to_single_map(joint_probs):
 
 
 def network(sample, model, optimizer=None, return_map=False):
-    textual_input = sample['batch_word_vectors']
-    textual_mask = sample['batch_txt_mask']
-    visual_mask = sample['batch_vis_mask']
     visual_input = sample['batch_video_features']
-    map_gts = sample['batch_map_gt']
+    textual_input = sample['batch_word_vectors']
+    gt = sample['batch_map_gt']
 
-    predictions, map_masks = model(textual_input, textual_mask, visual_input, visual_mask)
+    predictions = model(visual_input, textual_input)
 
+    print(predictions.shape)
+
+    map_masks, map_gts = [], []     # 这一句可以删了
     loss_value = 0
     for prediction, map_mask, map_gt in zip(predictions, map_masks, map_gts):
         scale_loss = getattr(loss, cfg.LOSS.NAME)(prediction, map_mask, map_gt.cuda(), cfg.LOSS.PARAMS)
@@ -301,6 +302,7 @@ def train(cfg, verbose):
     else:
         raise NotImplementedError
 
+    # TODO 修改MomentLocalizationDataset
     train_dataset = MomentLocalizationDataset(cfg.DATASET, 'train')
     train_loader = DataLoader(train_dataset,
                               batch_size=cfg.TRAIN.BATCH_SIZE,

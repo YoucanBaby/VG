@@ -22,10 +22,10 @@ class Sequential(nn.Module):
             ) for _ in range(depth)
         ])
         self.ca_v_block = nn.ModuleList(
-            [CrossAttention(dim, heads=heads, dropout=dropout, drop_path=drop_path) for _ in range(depth)]
+            [CrossAttention(dim, dim, heads=heads, dropout=dropout, drop_path=drop_path) for _ in range(depth)]
         )
         self.ca_t_block = nn.ModuleList(
-            [CrossAttention(dim, heads=heads, dropout=dropout, drop_path=drop_path) for _ in range(depth)]
+            [CrossAttention(dim, dim, heads=heads, dropout=dropout, drop_path=drop_path) for _ in range(depth)]
         )
 
         self.latent = nn.Parameter(torch.randn(tokens, dim))

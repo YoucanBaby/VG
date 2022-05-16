@@ -30,7 +30,7 @@ class GTR(nn.Module):
             nn.init.constant_(m.bias, 0)
             nn.init.constant_(m.weight, 1.0)
 
-    def forward(self, textual_input, textual_mask, visual_input, visual_mask):
+    def forward(self, visual_input, textual_input):
         # visual_input.shape: [B, 1024, 768], textual_input.shape: [B, 25, 300],
 
         visual_input = rearrange(visual_input, 'b d n-> b n d')
@@ -39,7 +39,7 @@ class GTR(nn.Module):
         # v_f.shape: [B, 768, 384]
 
         t_f = self.text_encoder(textual_input)
-        # t_f.shape: [B, 25, 384]
+        # t_f.shape: [B, 不定长, 384]
 
         latent = self.decoder(v_f, t_f)
         output = self.prediction(latent)

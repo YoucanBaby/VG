@@ -105,7 +105,6 @@ def _update_dict(cfg, value):
 def update_config(config_file):
     with open(config_file) as f:
         exp_config = edict(yaml.load(f, Loader=yaml.FullLoader))
-        print(exp_config.items())
         for k, v in exp_config.items():
             if k in cfg:
                 if isinstance(v, dict):

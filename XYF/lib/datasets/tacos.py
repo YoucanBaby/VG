@@ -10,7 +10,7 @@ import torch.utils.data as data
 import torchtext
 
 from . import average_to_fixed_length
-from core.eval import iou
+from lib.core.eval import iou
 from core.config import config
 
 class TACoS(data.Dataset):

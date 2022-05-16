@@ -25,10 +25,11 @@ class VisualEncoder(nn.Module):
 
     def forward(self, x):
         b, *_ = x.shape
+        x = self.proj(x)
+
         pos_embed = repeat(self.pos_embed, "... -> b ...", b=b)
         x = x + pos_embed
 
-        x = self.proj(x)
         for sa in self.sa_block:
             x = sa(x)
         return x

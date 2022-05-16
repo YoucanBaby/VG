@@ -3,35 +3,38 @@ import argparse
 import numpy as np
 from terminaltables import AsciiTable
 
-from core.config import config, update_config
+from lib.core.config import config, update_config
 
-def iou(pred, gt): # require pred and gt is numpy
-    assert isinstance(pred, list) and isinstance(gt,list)
-    pred_is_list = isinstance(pred[0],list)
-    gt_is_list = isinstance(gt[0],list)
+
+def iou(pred, gt):  # require pred and gt is numpy
+    assert isinstance(pred, list) and isinstance(gt, list)
+    pred_is_list = isinstance(pred[0], list)
+    gt_is_list = isinstance(gt[0], list)
     if not pred_is_list: pred = [pred]
     if not gt_is_list: gt = [gt]
     pred, gt = np.array(pred), np.array(gt)
-    inter_left = np.maximum(pred[:,0,None], gt[None,:,0])
-    inter_right = np.minimum(pred[:,1,None], gt[None,:,1])
+    inter_left = np.maximum(pred[:, 0, None], gt[None, :, 0])
+    inter_right = np.minimum(pred[:, 1, None], gt[None, :, 1])
     inter = np.maximum(0.0, inter_right - inter_left)
-    union_left = np.minimum(pred[:,0,None], gt[None,:,0])
-    union_right = np.maximum(pred[:,1,None], gt[None,:,1])
+    union_left = np.minimum(pred[:, 0, None], gt[None, :, 0])
+    union_right = np.maximum(pred[:, 1, None], gt[None, :, 1])
     union = np.maximum(0.0, union_right - union_left)
     overlap = 1.0 * inter / union
     if not gt_is_list:
-        overlap = overlap[:,0]
+        overlap = overlap[:, 0]
     if not pred_is_list:
         overlap = overlap[0]
     return overlap
 
+
 def rank(pred, gt):
     return pred.index(gt) + 1
+
 
 def nms(dets, thresh=0.4, top_k=-1):
     """Pure Python NMS baseline."""
     if len(dets) == 0: return []
-    order = np.arange(0,len(dets),1)
+    order = np.arange(0, len(dets), 1)
     dets = np.array(dets)
     x1 = dets[:, 0]
     x2 = dets[:, 1]
@@ -51,9 +54,11 @@ def nms(dets, thresh=0.4, top_k=-1):
 
     return dets[keep]
 
+
 def eval(segments, data):
-    tious = [float(i) for i in config.TEST.TIOU.split(',')] if isinstance(config.TEST.TIOU,str) else [config.TEST.TIOU]
-    recalls = [int(i) for i in config.TEST.RECALL.split(',')] if isinstance(config.TEST.RECALL,str) else [config.TEST.RECALL]
+    tious = [float(i) for i in config.TEST.TIOU.split(',')] if isinstance(config.TEST.TIOU, str) else [config.TEST.TIOU]
+    recalls = [int(i) for i in config.TEST.RECALL.split(',')] if isinstance(config.TEST.RECALL, str) else [
+        config.TEST.RECALL]
 
     eval_result = [[[] for _ in recalls] for _ in tious]
     max_recall = max(recalls)
@@ -63,14 +68,14 @@ def eval(segments, data):
         overlap = iou(seg, [dat['times']])
         average_iou.append(np.mean(np.sort(overlap[0])[-3:]))
 
-        for i,t in enumerate(tious):
-            for j,r in enumerate(recalls):
+        for i, t in enumerate(tious):
+            for j, r in enumerate(recalls):
                 eval_result[i][j].append((overlap > t)[:r].any())
     eval_result = np.array(eval_result).mean(axis=-1)
     miou = np.mean(average_iou)
 
-
     return eval_result, miou
+
 
 def eval_predictions(segments, data, verbose=True):
     eval_result, miou = eval(segments, data)
@@ -79,17 +84,19 @@ def eval_predictions(segments, data, verbose=True):
 
     return eval_result, miou
 
-def display_results(eval_result, miou, title=None):
-    tious = [float(i) for i in config.TEST.TIOU.split(',')] if isinstance(config.TEST.TIOU,str) else [config.TEST.TIOU]
-    recalls = [int(i) for i in config.TEST.RECALL.split(',')] if isinstance(config.TEST.RECALL,str) else [config.TEST.RECALL]
 
-    display_data = [['Rank@{},mIoU@{}'.format(i,j) for i in recalls for j in tious]+['mIoU']]
-    eval_result = eval_result*100
-    miou = miou*100
+def display_results(eval_result, miou, title=None):
+    tious = [float(i) for i in config.TEST.TIOU.split(',')] if isinstance(config.TEST.TIOU, str) else [config.TEST.TIOU]
+    recalls = [int(i) for i in config.TEST.RECALL.split(',')] if isinstance(config.TEST.RECALL, str) else [
+        config.TEST.RECALL]
+
+    display_data = [['Rank@{},mIoU@{}'.format(i, j) for i in recalls for j in tious] + ['mIoU']]
+    eval_result = eval_result * 100
+    miou = miou * 100
     display_data.append(['{:.02f}'.format(eval_result[j][i]) for i in range(len(recalls)) for j in range(len(tious))]
-                        +['{:.02f}'.format(miou)])
+                        + ['{:.02f}'.format(miou)])
     table = AsciiTable(display_data, title)
-    for i in range(len(tious)*len(recalls)):
+    for i in range(len(tious) * len(recalls)):
         table.justify_columns[i] = 'center'
     return table.table
 
@@ -109,9 +116,11 @@ def parse_args():
 
     return args
 
+
 def reset_config(config, args):
     if args.verbose:
         config.VERBOSE = args.verbose
+
 
 if __name__ == '__main__':
     args = parse_args()
