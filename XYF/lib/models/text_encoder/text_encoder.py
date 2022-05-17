@@ -17,6 +17,7 @@ class TextEncoder(nn.Module):
         dropout = cfg.DROPOUT
         drop_path = cfg.DROPPATH
 
+        nn.LSTM()
         self.proj = nn.Linear(input_dim, dim)
         self.sa_block = nn.ModuleList([SelfAttention(dim, heads, dropout=dropout, drop_path=drop_path) for _ in range(depth)])
 

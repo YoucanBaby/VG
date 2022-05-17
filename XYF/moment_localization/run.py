@@ -73,93 +73,35 @@ def reset_config(config, args):
 
 
 def collate_fn(batch):
-    batch_word_vectors = [b['word_vectors'] for b in batch]
-    batch_txt_mask = [b['txt_mask'] for b in batch]
-    batch_vis_mask = [b['vis_mask'] for b in batch]
-    batch_map_gt = [b['map_gt'] for b in batch]
     batch_anno_idxs = [b['anno_idx'] for b in batch]
     batch_video_ids = [b['video_id'] for b in batch]
-    batch_video_features = [b['video_features'] for b in batch]
     batch_descriptions = [b['description'] for b in batch]
+    batch_video_features = [b['video_features'] for b in batch]
+    batch_text_features = [b['text_features'] for b in batch]
+    batch_ground_truths = [b['ground_truth'] for b in batch]
 
     batch_data = {
-        'batch_video_ids': batch_video_ids,
         'batch_anno_idxs': batch_anno_idxs,
+        'batch_video_ids': batch_video_ids,
         'batch_descriptions': batch_descriptions,
-        'batch_word_vectors': nn.utils.rnn.pad_sequence(batch_word_vectors, batch_first=True),
-        'batch_txt_mask': nn.utils.rnn.pad_sequence(batch_txt_mask, batch_first=True),
-        'batch_map_gt': [nn.utils.rnn.pad_sequence(map_gt, batch_first=True).float()[:, None] for map_gt in
-                         zip(*batch_map_gt)],
-        'batch_video_features': nn.utils.rnn.pad_sequence(batch_video_features, batch_first=True).float().transpose(1,
-                                                                                                                    2),
-        'batch_vis_mask': nn.utils.rnn.pad_sequence(batch_vis_mask, batch_first=True).float().transpose(1, 2),
+        'batch_video_features': nn.utils.rnn.pad_sequence(batch_video_features, batch_first=True),
+        'batch_text_features': nn.utils.rnn.pad_sequence(batch_text_features, batch_first=True),
+        'batch_ground_truths': batch_ground_truths
     }
-
-    if cfg.DATASET.SLIDING_WINDOW:
-        batch_pos_emb = [b['pos_emb'] for b in batch]
-        batch_data.update({
-            'batch_pos_emb': [nn.utils.rnn.pad_sequence(pos_emb, batch_first=True).float().permute(0, 3, 1, 2) for
-                              pos_emb in zip(*batch_pos_emb)]
-        })
-    else:
-        batch_data.update({
-            'batch_duration': [b['duration'] for b in batch]
-        })
-
     return batch_data
-
-
-def recover_to_single_map(joint_probs):
-    batch_size, _, map_size, _ = joint_probs[0].shape
-    score_map = torch.zeros(batch_size, 1, map_size, map_size).cuda()
-    for prob in joint_probs:
-        scale_num_clips, scale_num_anchors = prob.shape[2:]
-        dilation = map_size // scale_num_clips
-        for i in range(scale_num_anchors):
-            score_map[..., :map_size // dilation * dilation:dilation, (i + 1) * dilation - 1] = torch.max(
-                score_map[..., :map_size // dilation * dilation:dilation, (i + 1) * dilation - 1].clone(), prob[..., i])
-    return score_map
-
-
-def upsample_to_single_map(joint_probs):
-    batch_size, _, map_size, _ = joint_probs[0].shape
-    score_map = torch.zeros(batch_size, 1, map_size, map_size).cuda()
-    for i, prob in enumerate(joint_probs):
-        dilation = 2 ** (i)
-        num_clips, num_anchors = prob.shape[-2:]
-        score_map[..., :dilation * num_clips, :dilation * num_anchors] = torch.max(
-            F.interpolate(prob, scale_factor=dilation, mode='bilinear', align_corners=True),
-            score_map[..., :dilation * num_clips, :dilation * num_anchors]
-        )
-    return score_map
 
 
 def network(sample, model, optimizer=None, return_map=False):
     visual_input = sample['batch_video_features']
-    textual_input = sample['batch_word_vectors']
-    gt = sample['batch_map_gt']
+    textual_input = sample['batch_text_features']
+    gt = sample['batch_ground_truths']
+
+    print(sample.keys())
+    print(visual_input.shape)
+    print(textual_input.shape)
 
     predictions = model(visual_input, textual_input)
-
-    print(predictions.shape)
-
-    map_masks, map_gts = [], []     # 这一句可以删了
-    loss_value = 0
-    for prediction, map_mask, map_gt in zip(predictions, map_masks, map_gts):
-        scale_loss = getattr(loss, cfg.LOSS.NAME)(prediction, map_mask, map_gt.cuda(), cfg.LOSS.PARAMS)
-        loss_value += scale_loss
-    joint_prob = recover_to_single_map(predictions)
-    mask = recover_to_single_map(map_masks)
-
-    if torch.sum(mask[0] > 0).item() == 0:
-        print(sample['batch_anno_idxs'])
-    assert torch.sum(mask[0] > 0).item() > 0
-
-    if cfg.DATASET.SLIDING_WINDOW:
-        time_unit = cfg.DATASET.TIME_UNIT * cfg.DATASET.INPUT_NUM_CLIPS / cfg.DATASET.OUTPUT_NUM_CLIPS[0]
-        sorted_times = get_sw_proposal_results(joint_prob.detach().cpu(), mask, time_unit)
-    else:
-        sorted_times = get_proposal_results(joint_prob.detach().cpu(), mask, sample['batch_duration'])
+    loss_value, best_prediction = getattr(loss, cfg.LOSS.NAME)(predictions, gt, cfg.LOSS.PARAMS)
 
     if model.training:
         optimizer.zero_grad()
@@ -167,14 +109,9 @@ def network(sample, model, optimizer=None, return_map=False):
         optimizer.step()
 
     if cfg.debug:
-        print('visual_input.shape: {}'.format(visual_input.shape))
-        print('textual_input.shape: {}'.format(textual_input.shape))
-        return
+        raise NameError('============This is debug!============')
 
-    if return_map:
-        return loss_value, sorted_times, joint_prob.detach().cpu()
-    else:
-        return loss_value, sorted_times
+    return loss_value, best_prediction
 
 
 def get_proposal_results(scores, mask, durations):
@@ -193,22 +130,6 @@ def get_proposal_results(scores, mask, durations):
     return out_sorted_times
 
 
-def get_sw_proposal_results(scores, mask, time_unit):
-    # assume all valid scores are larger than one
-    out_sorted_times = []
-    batch_size, _, num_clips, num_anchors = scores.shape
-    scores, indexes = torch.topk(scores.view(batch_size, -1), torch.sum(mask[0] > 0).item(), dim=1)
-    t_starts = (indexes // num_anchors).float() * time_unit
-    t_ends = t_starts + (indexes % num_anchors + 1).float() * time_unit
-
-    for t_start, t_end in zip(t_starts, t_ends):
-        t_start, t_end = t_start[t_start < t_end], t_end[t_start < t_end]
-        dets = nms(torch.stack([t_start, t_end], dim=1).tolist(), thresh=cfg.TEST.NMS_THRESH,
-                   top_k=max(cfg.TEST.RECALL))
-        out_sorted_times.append(dets)
-    return out_sorted_times
-
-
 def train_epoch(train_loader, model, optimizer, verbose=False):
     model.train()
 
@@ -216,6 +137,11 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
     sorted_segments_dict = {}
     if verbose:
         pbar = tqdm(total=len(train_loader), dynamic_ncols=True)
+
+    print('=' * 80)
+    print(len(train_loader.dataset.annotations))
+    print(train_loader.dataset.annotations[0])
+    print('=' * 80)
 
     for cur_iter, sample in enumerate(train_loader):
         loss_value, sorted_times = network(sample, model, optimizer)
@@ -294,7 +220,7 @@ def train(cfg, verbose):
 
     # print FLOPs and Parameters
     if True:
-        video_feature_input = torch.zeros([1, 1024, 768], device=device)
+        video_feature_input = torch.zeros([1, 768, 1024], device=device)
         text_feature_input = torch.zeros([1, 28, 300], device=device)
         count_dict, *_ = flop_count(model, (video_feature_input, text_feature_input))
         count = sum(count_dict.values())

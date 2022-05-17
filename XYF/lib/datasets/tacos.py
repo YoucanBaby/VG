@@ -13,6 +13,7 @@ from . import average_to_fixed_length
 from lib.core.eval import iou
 from core.config import config
 
+
 class TACoS(data.Dataset):
 
     vocab = torchtext.vocab.pretrained_aliases["glove.6B.300d"]()
@@ -29,19 +30,20 @@ class TACoS(data.Dataset):
         self.split = split
 
         # val_1.json is renamed as val.json, val_2.json is renamed as test.json
-        with open(os.path.join(self.data_dir, '{}.json'.format(split)),'r') as f:
+        with open(os.path.join(self.data_dir, '{}.json'.format(split)), 'r') as f:
             annotations = json.load(f)
         anno_pairs = []
         for vid, video_anno in annotations.items():
-            duration = video_anno['num_frames']/video_anno['fps']
+            duration = video_anno['num_frames'] / video_anno['fps']
             for timestamp, sentence in zip(video_anno['timestamps'], video_anno['sentences']):
                 if timestamp[0] < timestamp[1]:
                     anno_pairs.append(
                         {
                             'video': vid,
                             'duration': duration,
-                            'times':[max(timestamp[0]/video_anno['fps'],0),min(timestamp[1]/video_anno['fps'],duration)],
-                            'description':sentence,
+                            'times': [max(timestamp[0] / video_anno['fps'], 0),
+                                      min(timestamp[1] / video_anno['fps'], duration)],
+                            'description': sentence,
                         }
                     )
         self.annotations = anno_pairs
@@ -59,12 +61,12 @@ class TACoS(data.Dataset):
 
         # visual_input = sample_to_fixed_length(visual_input, random_sampling=config.DATASET.RANDOM_SAMPLING)
         visual_input = average_to_fixed_length(visual_input)
-        num_clips = config.DATASET.NUM_SAMPLE_CLIPS//config.DATASET.TARGET_STRIDE
-        s_times = torch.arange(0,num_clips).float()*duration/num_clips
-        e_times = torch.arange(1,num_clips+1).float()*duration/num_clips
-        overlaps = iou(torch.stack([s_times[:,None].expand(-1,num_clips),
-                                    e_times[None,:].expand(num_clips,-1)],dim=2).view(-1,2).tolist(),
-                       torch.tensor([gt_s_time, gt_e_time]).tolist()).reshape(num_clips,num_clips)
+        num_clips = config.DATASET.NUM_SAMPLE_CLIPS // config.DATASET.TARGET_STRIDE
+        s_times = torch.arange(0, num_clips).float() * duration / num_clips
+        e_times = torch.arange(1, num_clips + 1).float() * duration / num_clips
+        overlaps = iou(torch.stack([s_times[:, None].expand(-1, num_clips),
+                                    e_times[None, :].expand(num_clips, -1)], dim=2).view(-1, 2).tolist(),
+                       torch.tensor([gt_s_time, gt_e_time]).tolist()).reshape(num_clips, num_clips)
 
         item = {
             'visual_input': visual_input,
@@ -86,6 +88,6 @@ class TACoS(data.Dataset):
         with h5py.File(os.path.join(self.data_dir, 'tall_c3d_features.hdf5'), 'r') as f:
             features = torch.from_numpy(f[vid][:])
         if config.DATASET.NORMALIZE:
-            features = F.normalize(features,dim=1)
+            features = F.normalize(features, dim=1)
         vis_mask = torch.ones((features.shape[0], 1))
         return features, vis_mask
