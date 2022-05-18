@@ -57,7 +57,7 @@ class Attention(nn.Module):
         attn = self.dropout(attn)
 
         out = einsum('b i j, b j d -> b i d', attn, v)
-        out = rearrange(out, '(b h) n d -> b n (h d)')
+        out = rearrange(out, '(b h) n d -> b n (h d)', h=self.heads)
         return self.to_out(out)
 
 
