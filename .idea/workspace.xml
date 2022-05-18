@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="改得差不多了">
+    <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="程序可以跑啦！">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2D-TAN/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/moment_localization/run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/models/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/loss.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/moment_localization/eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/eval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/submit/msroctovc.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/submit/msroctovc.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -252,7 +246,21 @@
       <option name="project" value="LOCAL" />
       <updated>1652833522955</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="程序可以跑啦！">
+      <created>1652876858344</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1652876858344</updated>
+    </task>
+    <task id="LOCAL-00024" summary="程序可以跑啦！">
+      <created>1652876883193</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1652876883193</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -275,7 +283,8 @@
     <MESSAGE value="Config GTR Network" />
     <MESSAGE value="2022.05.17" />
     <MESSAGE value="改得差不多了" />
-    <option name="LAST_COMMIT_MESSAGE" value="改得差不多了" />
+    <MESSAGE value="程序可以跑啦！" />
+    <option name="LAST_COMMIT_MESSAGE" value="程序可以跑啦！" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
