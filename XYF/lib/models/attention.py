@@ -1,5 +1,5 @@
 import torch
-from torch import nn
+from torch import nn, einsum
 
 from timm.models.layers import DropPath
 from einops import rearrange
@@ -51,7 +51,7 @@ class Attention(nn.Module):
 
         q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h=self.heads), (q, k, v))
 
-        dots = torch.matmul(q, k.transpose(-1, -2)) * self.scale
+        dots = einsum('b i d, b j d -> b i j', q, k) * self.scale
 
         attn = self.attend(dots)
         attn = self.dropout(attn)
