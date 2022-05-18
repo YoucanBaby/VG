@@ -99,8 +99,7 @@ def network(sample, model, optimizer=None):
     gt = sample['batch_ground_truths']
 
     preds = model(visual_input, textual_input)
-    best_pred = loss.get_best_pred(preds, gt, duration, cfg.LOSS.PARAMS)
-    loss_value = getattr(loss, cfg.LOSS.NAME)(best_pred, gt, duration, cfg.LOSS.PARAMS)
+    loss_value = getattr(loss, cfg.LOSS.NAME)(preds, gt, duration)
 
     if model.training:
         optimizer.zero_grad()
@@ -127,6 +126,12 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
                 for idx, timestamp in zip(sample['batch_anno_idxs'], preds[:, :, :2].detach().cpu().numpy().tolist())
             }
         )
+
+        if cur_iter % 50 == 0:
+            print('loss_value: {}'.format(loss_value))
+
+        if args.debug:
+            return
 
         if verbose:
             pbar.update(1)
@@ -178,7 +183,6 @@ def test_epoch(test_loader, model, verbose=False, save_results=False):
     sorted_preds = [preds_dict[key] for key in sorted(preds_dict.keys())]
 
     saved_dict = [saved_dict[key] for key in sorted(saved_dict.keys())]
-
     if save_results:
         if not os.path.exists('results/{}'.format(cfg.DATASET.NAME)):
             os.makedirs('results/{}'.format(cfg.DATASET.NAME))
@@ -187,6 +191,7 @@ def test_epoch(test_loader, model, verbose=False, save_results=False):
                                                  test_loader.dataset.split))
 
     result = eval.evaluate(sorted_preds, sorted_annotations)
+
     return loss_meter.avg, result
 
 
@@ -223,6 +228,7 @@ def train(cfg, verbose):
         logger.info('{:<30}  {:.1f} GFlops'.format('number of FLOPs: ', count))
         logger.info('{:<30}  {:.1f} MB'.format('number of params: ', n_parameters / 1000 ** 2))
 
+    # TODO lr_schedule: warm_up + cosine
     if cfg.OPTIM.NAME == 'Adam':
         optimizer = optim.Adam(model.parameters(), lr=cfg.OPTIM.PARAMS.LR)
     elif cfg.OPTIM.NAME == 'SGD':

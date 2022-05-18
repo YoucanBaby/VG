@@ -236,11 +236,14 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
 @torch.no_grad()
 def test_epoch(test_loader, model, verbose=False, save_results=False):
     model.eval()
+
     loss_meter = AverageMeter()
     sorted_segments_dict = {}
     saved_dict = {}
+
     if verbose:
         pbar = tqdm(total=len(test_loader), dynamic_ncols=True)
+
     for cur_iter, sample in enumerate(test_loader):
         loss_value, sorted_times, score_maps = network(sample, model, return_map=True)
         loss_meter.update(loss_value.item(), 1)

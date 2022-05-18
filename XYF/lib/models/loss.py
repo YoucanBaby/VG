@@ -2,34 +2,66 @@ import torch
 import torch.nn.functional as F
 from einops import rearrange, repeat, reduce
 
+from lib.core.config import cfg
+
 
 def get_iou_2d(pred, gt):
-    n = (pred[:, 1] - pred[:, 0]).clamp(min=0, max=1)
-    m = (gt[:, 1] - gt[:, 0]).clamp(min=0, max=1)
+    '''
+    :param pred: torch.size([b, 2])
+    :param gt: torch.size([b, 2])
+    :return: torch.size([b])
+    '''
+    n = (pred[:, 1] - pred[:, 0]).clamp(min=0)
+    m = (gt[:, 1] - gt[:, 0]).clamp(min=0)
 
-    inter_left = torch.max(pred[:, 0], gt[:, 0]).clamp(min=0, max=1)
-    inter_right = torch.min(pred[:, 1], gt[:, 1]).clamp(min=0, max=1)
-    inter = (inter_right - inter_left).clamp(min=0, max=1)
+    inter_left = torch.max(pred[:, 0], gt[:, 0]).clamp(min=0)
+    inter_right = torch.min(pred[:, 1], gt[:, 1]).clamp(min=0)
+    inter = (inter_right - inter_left).clamp(min=0)
 
     union = n + m - inter
 
     return inter / union
 
 
-def get_loss_2d(score, pred, gt, cfg):
-    cost_l1, cost_iou = cfg.COST_L1, cfg.COST_IOU
+def get_loss(score, pred, gt):
+    '''
+    :param score: torch.size([b])
+    :param pred: torch.size([b, 2])
+    :param gt: torch.size([b, 2])
+    :return: torch.size([b])
+    '''
+    cost_l1, cost_iou = cfg.LOSS.PARAMS.COST_L1, cfg.LOSS.PARAMS.COST_IOU
 
     l1 = torch.abs(pred - gt)
-    l1 = l1[:, 0] + l1[:, 1]
-    iou = get_iou_2d(pred, gt)
+    l1_loss = cost_l1 * (l1[:, 0] + l1[:, 1]) ** 0.5
 
-    loss = - torch.log(score.clamp(min=1e-1)) - score + cost_l1 * l1 + cost_iou * iou
+    iou = get_iou_2d(pred, gt)
+    iou_loss = cost_iou * (-torch.log(iou + 1e-4)) ** 0.5
+
+    score_loss = (-torch.log(score + 1e-4)) ** 0.5
+
+    # TODO loss可以再改一改
+    loss = score_loss + l1_loss + iou_loss
+
+    # b = score.shape[0]
+    # message = ''
+    # message += 'score_loss: {:.2f}  '.format(score_loss.sum().item() / b)
+    # message += 'l1_loss: {:.2f}  '.format(l1_loss.sum().item() / b)
+    # message += 'iou_loss: {:.2f}  '.format(iou_loss.sum().item() / b)
+    # message += 'loss: {:.2f}'.format(loss.sum().item() / b)
+    # print(message)
+
     return loss
 
 
 def get_iou_3d(pred, gt):
-    n = pred[:, :, 1] - pred[:, :, 0]
-    m = gt[:, :, 1] - gt[:, :, 0]
+    '''
+    :param pred: torch.size([b, 100, 2])
+    :param gt: torch.size([b, 100, 2])
+    :return: torch.size([b, 100])
+    '''
+    n = (pred[:, :, 1] - pred[:, :, 0]).clamp(min=0)
+    m = (gt[:, :, 1] - gt[:, :, 0]).clamp(min=0)
 
     inter_left = torch.max(pred[:, :, 0], gt[:, :, 0])
     inter_right = torch.min(pred[:, :, 1], gt[:, :, 1])
@@ -40,20 +72,29 @@ def get_iou_3d(pred, gt):
     return inter / union
 
 
-def get_box_loss_3d(score, pred, gt, cfg):
-    cost_l1, cost_iou = cfg.COST_L1, cfg.COST_IOU
+def get_match_loss(score, pred, gt):
+    '''
+    :param score: torch.size([b, 100])
+    :param pred: torch.size([b, 100, 2])
+    :param gt: torch.size([b, 100, 2])
+    :param cfg:
+    :return: torch.size([b, 100])
+    '''
+    cost_l1, cost_iou = cfg.LOSS.PARAMS.COST_L1, cfg.LOSS.PARAMS.COST_IOU
 
     l1 = torch.abs(pred - gt)
-    l1 = l1[:, :, 0] + l1[:, :, 1]
-    iou = get_iou_3d(pred, gt)
+    l1_loss = l1[:, :, 0] + l1[:, :, 1]
 
-    loss = - score + cost_l1 * l1 + cost_iou * iou
+    iou = get_iou_3d(pred, gt)
+    iou_loss = - torch.log(iou + 1e-8)
+
+    loss = - score + cost_l1 * l1_loss + cost_iou * iou_loss
     return loss
 
 
-def get_best_pred(preds, gt, duration, cfg):
+def get_best_pred(preds, gt, duration):
     '''
-    返回最好的预测结果
+    返回最好的预测结果的下标
     :param preds: torch.size([b, 100, 3])
     :param gt: list.size([b, 2])
     :param duration: list.size([b])
@@ -67,41 +108,43 @@ def get_best_pred(preds, gt, duration, cfg):
     gt = repeat(gt, 'b d -> b n d', n=n)
 
     duration = torch.tensor(duration, device=device, requires_grad=False)
-    duration = repeat(duration, 'b -> b n 2', n=n)
+    duration = repeat(duration, 'b d -> b n d', n=n)
 
-    norm_times = preds[:, :, :2] / duration
-    norm_score = preds[:, :, 2] / 100
+    norm_times = (preds[:, :, :2] / duration).clamp(min=0, max=1)
+    norm_score = (preds[:, :, 2] / 100).clamp(min=0, max=1)
     norm_gt = gt / duration
 
-    box_loss = get_box_loss_3d(norm_score, norm_times, norm_gt, cfg)
-    index = torch.argmin(box_loss, dim=1)
+    match_loss = get_match_loss(norm_score, norm_times, norm_gt)
+    index = torch.argmin(match_loss, dim=1)
 
     best_pred = torch.stack([preds[i, j] for i, j in enumerate(index)])
 
     return best_pred
 
 
-def many_to_one_loss(best_pred, gt, duration, cfg):
+def many_to_one_loss(preds, gt, duration):
     '''
-    :param best_pred: torch.size([b, 3])
+    :param preds: torch.size([b, 100, 3])
     :param gt: list.size([b, 2])
     :param duration: list.size([b])
     :param cfg:
     :return: torch.size([1])
     '''
-    device = best_pred.device
-    b, _ = best_pred.shape
+    device = preds.device
+    b, *_ = preds.shape
 
     gt = torch.tensor(gt, device=device, requires_grad=False)
 
     duration = torch.tensor(duration, device=device, requires_grad=False)
     duration = repeat(duration, 'b -> b 2')
 
-    norm_times = best_pred[:, :2] / duration
-    norm_score = best_pred[:, 2] / 100
+    best_pred = get_best_pred(preds, gt, duration)
+
+    norm_times = (best_pred[:, :2] / duration).clamp(min=0, max=1)
+    norm_score = (best_pred[:, 2] / 100).clamp(min=0, max=1)
     norm_gt = gt / duration
 
-    loss = get_loss_2d(norm_score, norm_times, norm_gt, cfg)
+    loss = get_loss(norm_score, norm_times, norm_gt)
 
     loss_value = loss.sum() / b
     return loss_value

@@ -41,6 +41,7 @@ def evaluate(preds, annotations):
     eval_result = [[[] for _ in recalls] for _ in tious]
     average_iou = []
 
+    # TODO eval这一部分没有完全懂
     for pred, data in zip(preds, annotations):
         gt = data['times']
         iou = get_iou(pred, gt)
