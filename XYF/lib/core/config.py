@@ -45,6 +45,7 @@ cfg.MODEL.VISUAL_ENCODER.PARAMS = None
 cfg.MODEL.TEXT_ENCODER = edict()
 cfg.MODEL.TEXT_ENCODER.NAME = ''
 cfg.MODEL.TEXT_ENCODER.PARAMS = None
+cfg.MODEL.TEXT_ENCODER.RNN = None
 cfg.MODEL.DECODER = edict()
 cfg.MODEL.DECODER.NAME = ''
 cfg.MODEL.DECODER.PARAMS = None
@@ -67,7 +68,7 @@ cfg.TRAIN.SHUFFLE = True
 cfg.TRAIN.CONTINUE = False
 
 cfg.LOSS = edict()
-cfg.LOSS.NAME = 'bce_loss'
+cfg.LOSS.NAME = 'many_to_one_loss'
 cfg.LOSS.PARAMS = None
 
 # test

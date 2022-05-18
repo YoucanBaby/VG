@@ -10,11 +10,10 @@ class FFN(nn.Module):
     def __init__(self, cfg):
         super(FFN, self).__init__()
         input_dim = cfg.INPUT_DIM
-        dim = cfg.OUTPUT_DIM
 
         self.to_out = nn.Sequential(
             nn.LayerNorm(input_dim),
-            nn.Linear(input_dim, dim)
+            nn.Linear(input_dim, 3)
         )
 
     def forward(self, x):

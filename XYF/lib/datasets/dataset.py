@@ -152,6 +152,7 @@ class MomentLocalizationDataset(DatasetBase):
     def get_item(self, index):
         # index = 752#2548#3951#837#3951
         video_id = self.annotations[index]['video']
+        duration = self.annotations[index]['duration']
         description = self.annotations[index]['description']
         video_features = self.get_video_features(video_id)
         text_features = self.get_sentence_features(description)
@@ -160,6 +161,7 @@ class MomentLocalizationDataset(DatasetBase):
         item = {
             'anno_idx': index,
             'video_id': video_id,
+            'duration': duration,
             'description': description,
             'video_features': video_features,
             'text_features': text_features,

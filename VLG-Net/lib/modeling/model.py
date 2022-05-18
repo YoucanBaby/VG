@@ -242,7 +242,7 @@ class VLG(nn.Module):
 
 
 if __name__ == '__main__':
-    # TODO: Rewrite unit test
+    # Rewrite unit test
     raise ValueError('Deprecated - Needs rewriting')
     import time
     from lib.config import cfg

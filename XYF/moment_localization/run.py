@@ -17,7 +17,6 @@ from tqdm import tqdm
 from fvcore.nn import flop_count, FlopCountAnalysis, flop_count_str
 
 import eval
-from eval import nms
 from pathlib import Path
 
 from lib.datasets.dataset import MomentLocalizationDataset
@@ -75,6 +74,7 @@ def reset_config(config, args):
 def collate_fn(batch):
     batch_anno_idxs = [b['anno_idx'] for b in batch]
     batch_video_ids = [b['video_id'] for b in batch]
+    batch_duration = [b['duration'] for b in batch]
     batch_descriptions = [b['description'] for b in batch]
     batch_video_features = [b['video_features'] for b in batch]
     batch_text_features = [b['text_features'] for b in batch]
@@ -83,6 +83,7 @@ def collate_fn(batch):
     batch_data = {
         'batch_anno_idxs': batch_anno_idxs,
         'batch_video_ids': batch_video_ids,
+        'batch_duration': batch_duration,
         'batch_descriptions': batch_descriptions,
         'batch_video_features': nn.utils.rnn.pad_sequence(batch_video_features, batch_first=True),
         'batch_text_features': nn.utils.rnn.pad_sequence(batch_text_features, batch_first=True),
@@ -91,62 +92,42 @@ def collate_fn(batch):
     return batch_data
 
 
-def network(sample, model, optimizer=None, return_map=False):
+def network(sample, model, optimizer=None):
+    duration = sample['batch_duration']
     visual_input = sample['batch_video_features']
     textual_input = sample['batch_text_features']
     gt = sample['batch_ground_truths']
 
-    print(sample.keys())
-    print(visual_input.shape)
-    print(textual_input.shape)
-
-    predictions = model(visual_input, textual_input)
-    loss_value, best_prediction = getattr(loss, cfg.LOSS.NAME)(predictions, gt, cfg.LOSS.PARAMS)
+    preds = model(visual_input, textual_input)
+    best_pred = loss.get_best_pred(preds, gt, duration, cfg.LOSS.PARAMS)
+    loss_value = getattr(loss, cfg.LOSS.NAME)(best_pred, gt, duration, cfg.LOSS.PARAMS)
 
     if model.training:
         optimizer.zero_grad()
         loss_value.backward()
         optimizer.step()
 
-    if cfg.debug:
-        raise NameError('============This is debug!============')
-
-    return loss_value, best_prediction
-
-
-def get_proposal_results(scores, mask, durations):
-    # assume all valid scores are larger than one
-    out_sorted_times = []
-    batch_size, _, num_clips, num_anchors = scores.shape
-    scores, indexes = torch.topk(scores.view(batch_size, -1), torch.sum(mask[0] > 0).item(), dim=1)
-    t_starts = (indexes // num_anchors).float() / num_clips * torch.tensor(durations).view(batch_size, 1)
-    t_ends = t_starts + (indexes % num_anchors + 1).float() / num_clips * torch.tensor(durations).view(batch_size, 1)
-
-    for t_start, t_end in zip(t_starts, t_ends):
-        t_start, t_end = t_start[t_start < t_end], t_end[t_start < t_end]
-        dets = nms(torch.stack([t_start, t_end], dim=1).tolist(), thresh=cfg.TEST.NMS_THRESH,
-                   top_k=max(cfg.TEST.RECALL))
-        out_sorted_times.append(dets)
-    return out_sorted_times
+    return loss_value, preds
 
 
 def train_epoch(train_loader, model, optimizer, verbose=False):
     model.train()
 
     loss_meter = AverageMeter()
-    sorted_segments_dict = {}
+    preds_dict = {}
     if verbose:
         pbar = tqdm(total=len(train_loader), dynamic_ncols=True)
 
-    print('=' * 80)
-    print(len(train_loader.dataset.annotations))
-    print(train_loader.dataset.annotations[0])
-    print('=' * 80)
-
     for cur_iter, sample in enumerate(train_loader):
-        loss_value, sorted_times = network(sample, model, optimizer)
+        loss_value, preds = network(sample, model, optimizer)
         loss_meter.update(loss_value.item(), 1)
-        sorted_segments_dict.update({idx: timestamp for idx, timestamp in zip(sample['batch_anno_idxs'], sorted_times)})
+        preds_dict.update(
+            {
+                idx: timestamp
+                for idx, timestamp in zip(sample['batch_anno_idxs'], preds[:, :, :2].detach().cpu().numpy().tolist())
+            }
+        )
+
         if verbose:
             pbar.update(1)
 
@@ -154,9 +135,9 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
         pbar.close()
 
     annotations = train_loader.dataset.annotations
-    annotations = [annotations[key] for key in sorted(sorted_segments_dict.keys())]
-    sorted_segments = [sorted_segments_dict[key] for key in sorted(sorted_segments_dict.keys())]
-    result = eval.evaluate(sorted_segments, annotations)
+    sorted_annotations = [annotations[key] for key in sorted(preds_dict.keys())]
+    sorted_preds = [preds_dict[key] for key in sorted(preds_dict.keys())]
+    result = eval.evaluate(sorted_preds, sorted_annotations)
 
     return loss_meter.avg, result
 
@@ -164,36 +145,48 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
 @torch.no_grad()
 def test_epoch(test_loader, model, verbose=False, save_results=False):
     model.eval()
+
     loss_meter = AverageMeter()
-    sorted_segments_dict = {}
+    preds_dict = {}
     saved_dict = {}
+
     if verbose:
         pbar = tqdm(total=len(test_loader), dynamic_ncols=True)
+
     for cur_iter, sample in enumerate(test_loader):
-        loss_value, sorted_times, score_maps = network(sample, model, return_map=True)
+        loss_value, preds = network(sample, model)
         loss_meter.update(loss_value.item(), 1)
-        sorted_segments_dict.update({idx: timestamp for idx, timestamp in zip(sample['batch_anno_idxs'], sorted_times)})
+        preds_dict.update(
+            {
+                idx: timestamp
+                for idx, timestamp in zip(sample['batch_anno_idxs'], preds[:, :, :2].detach().cpu().numpy().tolist())
+            }
+        )
         saved_dict.update({idx: {'vid': vid, 'timestamps': timestamp, 'description': description}
                            for idx, vid, timestamp, description in zip(sample['batch_anno_idxs'],
                                                                        sample['batch_video_ids'],
-                                                                       sorted_times,
-                                                                       sample['batch_descriptions'])})
+                                                                       sample['batch_descriptions'],
+                                                                       preds[:, :, :2].detach().cpu().numpy().tolist())})
         if verbose:
             pbar.update(1)
 
     if verbose:
         pbar.close()
+
     annotations = test_loader.dataset.annotations
-    annotations = [annotations[key] for key in sorted(sorted_segments_dict.keys())]
-    sorted_segments = [sorted_segments_dict[key] for key in sorted(sorted_segments_dict.keys())]
+    sorted_annotations = [annotations[key] for key in sorted(preds_dict.keys())]
+    sorted_preds = [preds_dict[key] for key in sorted(preds_dict.keys())]
+
     saved_dict = [saved_dict[key] for key in sorted(saved_dict.keys())]
+
     if save_results:
         if not os.path.exists('results/{}'.format(cfg.DATASET.NAME)):
             os.makedirs('results/{}'.format(cfg.DATASET.NAME))
         torch.save(saved_dict,
-                   'results/{}/{}-{}.pkl'.format(cfg.DATASET.NAME, os.path.basename(args.cfg).split('.yaml')[0],
+                   'results/{}/{}-{}.pkl'.format(cfg.DATASET.NAME, os.path.basename(args.cfg).split('.yaml')[1],
                                                  test_loader.dataset.split))
-    result = eval.evaluate(sorted_segments, annotations)
+
+    result = eval.evaluate(sorted_preds, sorted_annotations)
     return loss_meter.avg, result
 
 
@@ -226,7 +219,7 @@ def train(cfg, verbose):
         count = sum(count_dict.values())
         n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
-        logger.info(flop_count_str(FlopCountAnalysis(model, (video_feature_input, text_feature_input))))
+        # logger.info(flop_count_str(FlopCountAnalysis(model, (video_feature_input, text_feature_input))))
         logger.info('{:<30}  {:.1f} GFlops'.format('number of FLOPs: ', count))
         logger.info('{:<30}  {:.1f} MB'.format('number of params: ', n_parameters / 1000 ** 2))
 
@@ -241,7 +234,6 @@ def train(cfg, verbose):
     else:
         raise NotImplementedError
 
-    # TODO 修改MomentLocalizationDataset, 再修改loss function
     train_dataset = MomentLocalizationDataset(cfg.DATASET, 'train')
     train_loader = DataLoader(train_dataset,
                               batch_size=cfg.TRAIN.BATCH_SIZE,
