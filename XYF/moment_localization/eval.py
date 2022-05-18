@@ -7,50 +7,50 @@ from lib.core.config import cfg, update_config
 from lib.core.utils import iou
 
 
-def rank(pred, gt):
-    return pred.index(gt) + 1
+def get_iou(pred, gt):
+    '''
+    :param pred: list.size([100, 2])
+    :param gt: list.size([2])
+    :return:
+    '''
+    MAX = 1e8
+
+    pred, gt = np.array(pred), np.array(gt)
+    a = np.clip(pred[:, 1] - pred[:, 0], 0, MAX)
+    b = np.clip(gt[1] - gt[0], 0, MAX)
+
+    inter_left = np.clip(pred[:, 0] - gt[0], 0, MAX)
+    inter_right = np.clip(pred[:, 1] - gt[1], 0, MAX)
+
+    inter = np.clip(inter_right - inter_left, 0, MAX)
+
+    union = a + b - inter
+
+    return inter / union
 
 
-def nms(dets, thresh=0.4, top_k=-1):
-    """Pure Python NMS baseline."""
-    if len(dets) == 0: return []
-    order = np.arange(0, len(dets), 1)
-    dets = np.array(dets)
-    x1 = dets[:, 0]
-    x2 = dets[:, 1]
-    lengths = x2 - x1
-    assert all(lengths > 0)
-    keep = []
-    while order.size > 0:
-        i = order[0]
-        keep.append(i)
-        if len(keep) == top_k:
-            break
-        xx1 = np.maximum(x1[i], x1[order[1:]])
-        xx2 = np.minimum(x2[i], x2[order[1:]])
-        inter = np.maximum(0.0, xx2 - xx1)
-        ovr = inter / (lengths[i] + lengths[order[1:]] - inter)
-        inds = np.where(ovr <= thresh)[0]
-        order = order[inds + 1]
-
-    return dets[keep].tolist()
-
-
-def evaluate(segments, data):
+def evaluate(preds, annotations):
+    '''
+    :param preds: list.size([b, 100, 2])
+    :param annotations: list.size([b, 2])
+    :return:
+    '''
     tious = cfg.TEST.TIOU
     recalls = cfg.TEST.RECALL
 
     eval_result = [[[] for _ in recalls] for _ in tious]
-    # max_recall = max(recalls)
     average_iou = []
-    for seg, dat in zip(segments, data):
-        # seg = nms(seg, thresh=cfg.TEST.NMS_THRESH, top_k=max_recall).tolist()
-        overlap = iou(seg, [dat['times']])
-        average_iou.append(np.mean(np.sort(overlap[0])[-3:]))
+
+    for pred, data in zip(preds, annotations):
+        gt = data['times']
+        iou = get_iou(pred, gt)
+
+        iou = np.sort(iou, axis=-1)
+        average_iou.append(np.mean(iou, axis=-1))
 
         for i, t in enumerate(tious):
             for j, r in enumerate(recalls):
-                eval_result[i][j].append((overlap > t)[:r].any())
+                eval_result[i][j].append((iou > t)[:r].any())
 
     eval_result = np.array(eval_result).mean(axis=-1)
     miou = np.mean(average_iou)
