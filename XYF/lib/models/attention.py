@@ -51,6 +51,8 @@ class Attention(nn.Module):
 
         q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h=self.heads), (q, k, v))
 
+        print(q.shape)
+        print(k.shape)
         dots = einsum('b i d, b j d -> b i j', q, k) * self.scale
 
         attn = self.attend(dots)
