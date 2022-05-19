@@ -261,7 +261,7 @@ def train(cfg, verbose):
         logger.info('{:<30}  {:.1f} GFlops'.format('number of FLOPs: ', count))
         logger.info('{:<30}  {:.1f} MB'.format('number of params: ', n_parameters / 1000 ** 2))
 
-    # TODO lr_schedule: warm_up + cosine
+    # TODO lr_schedule: AdamW with Momentum
     if cfg.OPTIM.NAME == 'Adam':
         optimizer = optim.Adam(model.parameters(), lr=cfg.OPTIM.PARAMS.LR)
     elif cfg.OPTIM.NAME == 'SGD':
