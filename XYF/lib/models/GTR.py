@@ -41,4 +41,5 @@ class GTR(nn.Module):
 
         latent = self.decoder(v_f, t_f)
         output = self.prediction(latent)
+
         return output

@@ -29,7 +29,7 @@ class Sequential(nn.Module):
         )
 
         self.latent = nn.Parameter(torch.randn(tokens, dim))
-        trunc_normal_(self.latent, std=.02)
+        trunc_normal_(self.latent, std=.02).clamp_(0)
 
     def forward(self, v_f, t_f):
         b, *_ = v_f.shape
