@@ -128,7 +128,7 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
         )
 
         if cur_iter % 50 == 0:
-            print('loss_value: {}'.format(loss_value))
+            print('avg_loss: {:.2f}'.format(loss_meter.avg))
 
         if args.debug:
             return

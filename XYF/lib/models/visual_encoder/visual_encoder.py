@@ -27,7 +27,7 @@ class VisualEncoder(nn.Module):
         b, *_ = x.shape
         x = self.proj(x)
 
-        pos_embed = repeat(self.pos_embed, "... -> b ...", b=b)
+        # pos_embed = repeat(self.pos_embed, "... -> b ...", b=b)
         # x = x + pos_embed
 
         for sa in self.sa_block:

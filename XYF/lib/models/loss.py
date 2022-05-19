@@ -35,12 +35,14 @@ def get_loss(score, pred, gt):
     l1 = torch.abs(pred - gt)
     l1_loss = cost_l1 * (l1[:, 0] + l1[:, 1]) ** 0.5
 
-    iou = get_iou_2d(pred, gt)
-    iou_loss = cost_iou * (-torch.log(iou + 1e-4)) ** 0.5
+    iou = get_iou_2d(pred, gt).clamp(0, 1).add(1e-4)
+    iou_loss = cost_iou * (- torch.log(iou)) ** 0.5
 
-    score_loss = (-torch.log(score + 1e-4)) ** 0.5
+    score = score.clamp(0, 1).add(1e-4)
+    score_loss = (- torch.log(score)) ** 0.5
 
     # TODO loss可以再改一改
+    # TODO RuntimeError: Function 'PowBackward0' returned nan values in its 0th output.
     loss = score_loss + l1_loss + iou_loss
 
     # b = score.shape[0]
@@ -83,12 +85,12 @@ def get_match_loss(score, pred, gt):
     cost_l1, cost_iou = cfg.LOSS.PARAMS.COST_L1, cfg.LOSS.PARAMS.COST_IOU
 
     l1 = torch.abs(pred - gt)
-    l1_loss = l1[:, :, 0] + l1[:, :, 1]
+    l1_loss = cost_l1 * (l1[:, :, 0] + l1[:, :, 1])
 
-    iou = get_iou_3d(pred, gt)
-    iou_loss = - torch.log(iou + 1e-8)
+    iou = get_iou_3d(pred, gt).clamp(0, 1).add(1e-8)
+    iou_loss = cost_iou * (- torch.log(iou))
 
-    loss = - score + cost_l1 * l1_loss + cost_iou * iou_loss
+    loss = - score + l1_loss + iou_loss
     return loss
 
 
@@ -104,10 +106,7 @@ def get_best_pred(preds, gt, duration):
     device = preds.device
     b, n, _ = preds.shape
 
-    gt = torch.tensor(gt, device=device, requires_grad=False)
     gt = repeat(gt, 'b d -> b n d', n=n)
-
-    duration = torch.tensor(duration, device=device, requires_grad=False)
     duration = repeat(duration, 'b d -> b n d', n=n)
 
     norm_times = (preds[:, :, :2] / duration).clamp(min=0, max=1)
