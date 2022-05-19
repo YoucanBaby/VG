@@ -106,7 +106,7 @@ def network(sample, model, optimizer=None):
         optimizer.zero_grad()
         loss_value.backward()
         optimizer.step()
-        torch.cuda.synchronize()
+        # torch.cuda.synchronize()
 
     return preds, loss_dict
 
