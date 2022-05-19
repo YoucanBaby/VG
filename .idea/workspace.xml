@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="2022.05.18">
+    <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="2022.05.19">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/models/attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/attention.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/lib/models/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/loss.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/models/text_encoder/text_encoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/text_encoder/text_encoder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/models/visual_encoder/visual_encoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/visual_encoder/visual_encoder.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submit/msroctovc.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/submit/msroctovc.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -307,7 +305,14 @@
       <option name="project" value="LOCAL" />
       <updated>1652882416337</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="2022.05.19">
+      <created>1652926692147</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1652926692147</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -332,7 +337,8 @@
     <MESSAGE value="改得差不多了" />
     <MESSAGE value="程序可以跑啦！" />
     <MESSAGE value="2022.05.18" />
-    <option name="LAST_COMMIT_MESSAGE" value="2022.05.18" />
+    <MESSAGE value="2022.05.19" />
+    <option name="LAST_COMMIT_MESSAGE" value="2022.05.19" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

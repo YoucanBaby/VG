@@ -35,14 +35,13 @@ def get_loss(score, pred, gt):
     l1 = torch.abs(pred - gt)
     l1_loss = cost_l1 * (l1[:, 0] + l1[:, 1]) ** 0.5
 
-    iou = get_iou_2d(pred, gt).clamp(0, 1).add(1e-4)
+    iou = get_iou_2d(pred, gt).clamp(0).add(1e-4).clamp(0, 1)
     iou_loss = cost_iou * (- torch.log(iou)) ** 0.5
 
-    score = score.clamp(0, 1).add(1e-4)
+    score = score.clamp(0).add(1e-4).clamp(0, 1)
     score_loss = (- torch.log(score)) ** 0.5
 
     # TODO loss可以再改一改
-    # TODO RuntimeError: Function 'PowBackward0' returned nan values in its 0th output.
     loss = score_loss + l1_loss + iou_loss
 
     # b = score.shape[0]
@@ -87,7 +86,7 @@ def get_match_loss(score, pred, gt):
     l1 = torch.abs(pred - gt)
     l1_loss = cost_l1 * (l1[:, :, 0] + l1[:, :, 1])
 
-    iou = get_iou_3d(pred, gt).clamp(0, 1).add(1e-8)
+    iou = get_iou_3d(pred, gt).clamp(0).add(1e-8).clamp(0, 1)
     iou_loss = cost_iou * (- torch.log(iou))
 
     loss = - score + l1_loss + iou_loss
@@ -109,8 +108,8 @@ def get_best_pred(preds, gt, duration):
     gt = repeat(gt, 'b d -> b n d', n=n)
     duration = repeat(duration, 'b d -> b n d', n=n)
 
-    norm_times = (preds[:, :, :2] / duration).clamp(min=0, max=1)
-    norm_score = (preds[:, :, 2] / 100).clamp(min=0, max=1)
+    norm_times = (preds[:, :, :2] / duration).clamp(0, 1)
+    norm_score = (preds[:, :, 2] / 100).clamp(0, 1)
     norm_gt = gt / duration
 
     match_loss = get_match_loss(norm_score, norm_times, norm_gt)
