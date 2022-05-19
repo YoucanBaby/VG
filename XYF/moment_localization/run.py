@@ -139,7 +139,7 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
             }
         )
 
-        if cur_iter % 50 == 0:
+        if cur_iter % 100 == 0:
             message = 'avg_loss: {:.2f}'.format(loss_meter.avg)
             message += ' score_loss: {:.2f}'.format(score_loss_meter.avg)
             message += ' l1_loss: {:.2f}'.format(l1_loss_meter.avg)

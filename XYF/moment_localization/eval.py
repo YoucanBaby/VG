@@ -7,23 +7,19 @@ from lib.core.config import cfg, update_config
 from lib.core.utils import iou
 
 
-def get_iou(pred, gt):
+def get_iou(pred, gt, duration):
     '''
-    :param pred: list.size([100, 2])
-    :param gt: list.size([2])
-    :return:
+    :param pred: np.size([100, 2])
+    :param gt: np.size([1, 2])
+    :return: np.size([100])
     '''
-    MAX = 1e8
+    a = np.clip(pred[:, 1] - pred[:, 0], 0, duration)
+    b = gt[:, 1] - gt[:, 0]
 
-    pred, gt = np.array(pred), np.array(gt)
-    a = np.clip(pred[:, 1] - pred[:, 0], 0, MAX)
-    b = np.clip(gt[1] - gt[0], 0, MAX)
+    inter_left = np.clip(np.maximum(pred[:, 0], gt[:, 0]), 0, duration)
+    inter_right = np.clip(np.minimum(pred[:, 1], gt[:, 1]), 0, duration)
 
-    inter_left = np.clip(pred[:, 0] - gt[0], 0, MAX)
-    inter_right = np.clip(pred[:, 1] - gt[1], 0, MAX)
-
-    inter = np.clip(inter_right - inter_left, 0, MAX)
-
+    inter = np.clip(inter_right - inter_left, 0, duration)
     union = a + b - inter
 
     return inter / union
@@ -39,22 +35,27 @@ def evaluate(preds, annotations):
     recalls = cfg.TEST.RECALL
 
     eval_result = [[[] for _ in recalls] for _ in tious]
-    average_iou = []
+    max_iou_dict = []
 
-    # TODO eval这一部分没有完全懂
     for pred, data in zip(preds, annotations):
         gt = data['times']
-        iou = get_iou(pred, gt)
+        duration = data['duration']
 
-        iou = np.sort(iou, axis=-1)
-        average_iou.append(np.mean(iou, axis=-1))
+        pred, gt = np.array(pred), np.array(gt)
+        gt = np.expand_dims(gt, axis=0)
+
+        iou = get_iou(pred, gt, duration)
+        iou = np.sort(iou[::-1])
+
+        max_iou_dict.append(iou[0])
 
         for i, t in enumerate(tious):
             for j, r in enumerate(recalls):
                 eval_result[i][j].append((iou > t)[:r].any())
 
     eval_result = np.array(eval_result).mean(axis=-1)
-    miou = np.mean(average_iou)
+
+    miou = np.mean(max_iou_dict)
 
     # {'ranks': [[R1@0.1, R5@0.1], [R1@0.3, R5@0.3], [R1@0.5, R5@0.5], [R1@0.7, R5@0.7]], 'mIoU': [mean IoU]}
     result = {'ranks': eval_result, 'mIoU': miou}

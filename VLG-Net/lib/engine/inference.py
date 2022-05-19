@@ -5,7 +5,7 @@ from tqdm import tqdm
 
 import torch
 
-from lib.data.datasets.evaluation import evaluate
+from ..data.datasets.evaluation import evaluate
 from ..utils.comm import is_main_process, get_world_size
 from ..utils.comm import all_gather
 from ..utils.comm import synchronize
