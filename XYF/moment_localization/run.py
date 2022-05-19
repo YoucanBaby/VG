@@ -141,10 +141,11 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
         )
 
         if cur_iter % 50 == 0:
-            message = 'avg_loss: {:.2f}'.format(loss_meter.avg)
-            message += ' score_loss: {:.2f}'.format(score_loss_meter.avg)
-            message += ' l1_loss: {:.2f}'.format(l1_loss_meter.avg)
-            message += ' iou_loss: {:.2f}'.format(iou_loss_meter.avg)
+            message = 'lr: {}; '.format(optimizer.param_groups[0]['lr'])
+            message = 'avg_loss: {:.2f}; '.format(loss_meter.avg)
+            message += 'score_loss: {:.2f}; '.format(score_loss_meter.avg)
+            message += 'l1_loss: {:.2f}; '.format(l1_loss_meter.avg)
+            message += 'iou_loss: {:.2f}'.format(iou_loss_meter.avg)
             print(message)
 
             sorted_annotations = [annotations[key] for key in sorted(preds_dict.keys())]
@@ -381,6 +382,7 @@ def train(cfg, verbose):
             torch.save(model.module.state_dict(), saved_model_filename)
 
         scheduler.step()
+
 
 def test(cfg, split):
     # cudnn related setting, ignore it
