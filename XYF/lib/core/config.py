@@ -57,9 +57,12 @@ cfg.MODEL.PREDICTION.PARAMS = None
 cfg.OPTIM = edict()
 cfg.OPTIM.NAME = ''
 cfg.OPTIM.PARAMS = edict()
-cfg.OPTIM.SCHEDULER = edict()
-cfg.OPTIM.SCHEDULER.FACTOR = 0.5
-cfg.OPTIM.SCHEDULER.PATIENCE = 500
+
+# LR_SCHEDULER
+cfg.LR_SCHEDULER = edict()
+cfg.LR_SCHEDULER.NAME = ''
+cfg.LR_SCHEDULER.PARAMS = edict()
+
 # train
 cfg.TRAIN = edict()
 cfg.TRAIN.MAX_EPOCH = 100

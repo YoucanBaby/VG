@@ -15,6 +15,7 @@ import torch.nn.functional as F
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from fvcore.nn import flop_count, FlopCountAnalysis, flop_count_str
+import math
 
 import eval
 from pathlib import Path
@@ -201,7 +202,8 @@ def test_epoch(test_loader, model, verbose=False, save_results=False):
                            for idx, vid, timestamp, description in zip(sample['batch_anno_idxs'],
                                                                        sample['batch_video_ids'],
                                                                        sample['batch_descriptions'],
-                                                                       preds[:, :, :2].detach().cpu().numpy().tolist())})
+                                                                       preds[:, :,
+                                                                       :2].detach().cpu().numpy().tolist())})
         if verbose:
             pbar.update(1)
 
@@ -266,7 +268,18 @@ def train(cfg, verbose):
     elif cfg.OPTIM.NAME == 'RMSprop':
         optimizer = optim.RMSprop(model.parameters(), lr=cfg.OPTIM.PARAMS.LR)
     elif cfg.OPTIM.NAME == 'AdamW':
-        optimizer = optim.AdamW(model.parameters(), lr=cfg.OPTIM.PARAMS.LR)
+        optimizer = optim.AdamW(model.parameters(),
+                                lr=cfg.OPTIM.PARAMS.LR,
+                                weight_decay=cfg.OPTIM.PARAMS.WEIGHT_DECAY)
+
+        t = cfg.LR_SCHEDULER.PARAMS.WARM_UP_EPOCH
+        T = cfg.TRAIN.MAX_EPOCH
+        lr_lambda = lambda epoch: (0.9 * epoch / t + 0.1) if epoch < t else 0.1 if 0.5 * (
+                1 + math.cos(math.pi * (epoch - t) / (T - t))) < 0.1 else 0.5 * (
+                1 + math.cos(math.pi * (epoch - t) / (T - t)))
+        scheduler = optim.lr_scheduler.LambdaLR(optimizer,
+                                                lr_lambda=lr_lambda)
+
     else:
         raise NotImplementedError
 
@@ -303,7 +316,10 @@ def train(cfg, verbose):
     for cur_epoch in range(init_epoch, cfg.TRAIN.MAX_EPOCH):
         train_avg_loss, train_result = train_epoch(train_loader, model, optimizer, verbose)
 
-        loss_message = '\n' + 'epoch: {}; train loss {:.4f};'.format(cur_epoch, train_avg_loss)
+        loss_message = '\n' + 'epoch: {};'.format(cur_epoch)
+        loss_message += ' lr: {};'.format(optimizer.param_groups[0]['lr'])
+        loss_message += ' train loss {:.2f}'.format(train_avg_loss)
+
         table_message = '\n' + eval.display_results(train_result, 'performance on training set')
 
         if not cfg.DATASET.NO_VAL:
@@ -364,6 +380,7 @@ def train(cfg, verbose):
 
             torch.save(model.module.state_dict(), saved_model_filename)
 
+        scheduler.step()
 
 def test(cfg, split):
     # cudnn related setting, ignore it

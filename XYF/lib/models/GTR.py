@@ -40,6 +40,7 @@ class GTR(nn.Module):
         # t_f.shape: [B, 不定长, 384]
 
         latent = self.decoder(v_f, t_f)
+
         output = self.prediction(latent)
 
         return output
