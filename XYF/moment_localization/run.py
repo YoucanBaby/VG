@@ -113,6 +113,7 @@ def network(sample, model, optimizer=None):
 
 def train_epoch(train_loader, model, optimizer, verbose=False):
     model.train()
+    annotations = train_loader.dataset.annotations
 
     if True:
         loss_meter = AverageMeter()
@@ -143,7 +144,14 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
             message += ' score_loss: {:.2f}'.format(score_loss_meter.avg)
             message += ' l1_loss: {:.2f}'.format(l1_loss_meter.avg)
             message += ' iou_loss: {:.2f}'.format(iou_loss_meter.avg)
+
             print(message)
+
+            sorted_annotations = [annotations[key] for key in sorted(preds_dict.keys())]
+            sorted_preds = [preds_dict[key] for key in sorted(preds_dict.keys())]
+            result = eval.evaluate(sorted_preds, sorted_annotations)
+            table_message = eval.display_results(result, 'performance on training set')
+            print(table_message)
 
         if args.debug:
             return
@@ -154,7 +162,6 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
     if verbose:
         pbar.close()
 
-    annotations = train_loader.dataset.annotations
     sorted_annotations = [annotations[key] for key in sorted(preds_dict.keys())]
     sorted_preds = [preds_dict[key] for key in sorted(preds_dict.keys())]
     result = eval.evaluate(sorted_preds, sorted_annotations)
