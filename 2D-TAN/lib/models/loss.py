@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 
 
-def bce_rescale_loss(scores, masks, targets, cfg):
+def bce_rescale_loss(scores: object, masks: object, targets: object, cfg: object) -> object:
     '''
     :param scores:      torch.Size([B, 1, 64, 16])
     :param masks:       torch.Size([B, 1, 64, 16])

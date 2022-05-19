@@ -20,10 +20,10 @@ DATASET:
 OPTIM:
   NAME: Adam
   PARAMS:
-    LR: 0.0001
+    LR: 0.001
 
 TRAIN:
-  BATCH_SIZE: 48
+  BATCH_SIZE: 32
   MAX_EPOCH: 100
   CONTINUE: False
 
@@ -36,7 +36,7 @@ TEST:
 LOSS:
   NAME: many_to_one_loss
   PARAMS:
-    COST_L1: 5
+    COST_L1: 8
     COST_IOU: 1
 
 MODEL:

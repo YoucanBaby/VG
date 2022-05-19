@@ -99,27 +99,38 @@ def network(sample, model, optimizer=None):
     gt = sample['batch_ground_truths']
 
     preds = model(visual_input, textual_input)
-    loss_value = getattr(loss, cfg.LOSS.NAME)(preds, gt, duration)
+    loss_dict = getattr(loss, cfg.LOSS.NAME)(preds, gt, duration)
+    loss_value = loss_dict['loss']
 
     if model.training:
         optimizer.zero_grad()
         loss_value.backward()
         optimizer.step()
+        torch.cuda.synchronize()
 
-    return loss_value, preds
+    return preds, loss_dict
 
 
 def train_epoch(train_loader, model, optimizer, verbose=False):
     model.train()
 
-    loss_meter = AverageMeter()
+    if True:
+        loss_meter = AverageMeter()
+        score_loss_meter = AverageMeter()
+        l1_loss_meter = AverageMeter()
+        iou_loss_meter = AverageMeter()
+
     preds_dict = {}
     if verbose:
         pbar = tqdm(total=len(train_loader), dynamic_ncols=True)
 
     for cur_iter, sample in enumerate(train_loader):
-        loss_value, preds = network(sample, model, optimizer)
-        loss_meter.update(loss_value.item(), 1)
+        preds, loss_dict = network(sample, model, optimizer)
+        if True:
+            loss_meter.update(loss_dict['loss'].item(), 1)
+            score_loss_meter.update(loss_dict['score_loss'].item(), 1)
+            l1_loss_meter.update(loss_dict['l1_loss'].item(), 1)
+            iou_loss_meter.update(loss_dict['iou_loss'].item(), 1)
         preds_dict.update(
             {
                 idx: timestamp
@@ -128,7 +139,11 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
         )
 
         if cur_iter % 50 == 0:
-            print('avg_loss: {:.2f}'.format(loss_meter.avg))
+            message = 'avg_loss: {:.2f}'.format(loss_meter.avg)
+            message += ' score_loss: {:.2f}'.format(score_loss_meter.avg)
+            message += ' l1_loss: {:.2f}'.format(l1_loss_meter.avg)
+            message += ' iou_loss: {:.2f}'.format(iou_loss_meter.avg)
+            print(message)
 
         if args.debug:
             return
@@ -151,7 +166,12 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
 def test_epoch(test_loader, model, verbose=False, save_results=False):
     model.eval()
 
-    loss_meter = AverageMeter()
+    if True:
+        loss_meter = AverageMeter()
+        score_loss_meter = AverageMeter()
+        l1_loss_meter = AverageMeter()
+        iou_loss_meter = AverageMeter()
+
     preds_dict = {}
     saved_dict = {}
 
@@ -159,8 +179,12 @@ def test_epoch(test_loader, model, verbose=False, save_results=False):
         pbar = tqdm(total=len(test_loader), dynamic_ncols=True)
 
     for cur_iter, sample in enumerate(test_loader):
-        loss_value, preds = network(sample, model)
-        loss_meter.update(loss_value.item(), 1)
+        preds, loss_dict = network(sample, model)
+        if True:
+            loss_meter.update(loss_dict['loss'].item(), 1)
+            score_loss_meter.update(loss_dict['score_loss'].item(), 1)
+            l1_loss_meter.update(loss_dict['l1_loss'].item(), 1)
+            iou_loss_meter.update(loss_dict['iou_loss'].item(), 1)
         preds_dict.update(
             {
                 idx: timestamp
