@@ -63,8 +63,8 @@ def get_best_pred(preds, gt, duration):
     gt = repeat(gt, 'b d -> b n d', n=n)
     duration = repeat(duration, 'b d -> b n d', n=n)
 
-    norm_times = preds[:, :, :2] / duration
     norm_score = preds[:, :, 2] / 100
+    norm_times = preds[:, :, :2] / duration
     norm_gt = gt / duration
 
     match_loss = _match_loss(norm_score, norm_times, norm_gt)
@@ -96,16 +96,17 @@ class SetLoss(nn.Module):
 
     def iou_loss(self, pred, gt):
         iou = self.iou(pred, gt)
-        iou = iou.add(1e-4).clamp(0, 1)
+        iou = iou.add(1e-2).clamp(0, 1)
         return -torch.log(iou)
 
     def forward(self, score, pred, gt):
-        score = score.add(1e-4).clamp(0, 1)
-        score_loss = -torch.log(score)
+        # score = score.add(1e-2).clamp(0, 1)
+        # score_loss = -torch.log(score)
+        score = score.clamp(0, 1)
         l1_loss = self.cost_l1 * torch.abs(pred[:, 0] - gt[:, 0]) + torch.abs(pred[:, 1] - gt[:, 1])
         iou_loss = self.cost_iou * self.iou_loss(pred, gt)
-        loss = score_loss + l1_loss + iou_loss
-        return loss, score_loss, l1_loss, iou_loss
+        loss = -score + l1_loss + iou_loss
+        return loss, score, l1_loss, iou_loss
 
 
 def many_to_one_loss(preds, gt, duration):
@@ -125,20 +126,23 @@ def many_to_one_loss(preds, gt, duration):
 
     best_pred = get_best_pred(preds, gt, duration)
 
-    norm_times = (best_pred[:, :2] / duration).clamp(min=0, max=1)
     norm_score = (best_pred[:, 2] / 100).clamp(min=0, max=1)
+    norm_times = (best_pred[:, :2] / duration).clamp(min=0, max=1)
     norm_gt = gt / duration
 
     criterion = SetLoss()
-    loss, score_loss, l1_loss, iou_loss = criterion(norm_score, norm_times, norm_gt)
+    loss, score, l1_loss, iou_loss = criterion(norm_score, norm_times, norm_gt)
 
     loss_value = loss.sum() / b
-    score_loss_value = score_loss.sum() / b
+    score_value = score.sum() / b
+
+    # print(score, score_value.sum(), b)
+
     l1_loss_value = l1_loss.sum() / b
     iou_loss_value = iou_loss.sum() / b
 
     loss_dict = {'loss': loss_value,
-                 'score_loss': score_loss_value,
+                 'score': score_value,
                  'l1_loss': l1_loss_value,
                  'iou_loss': iou_loss_value}
 

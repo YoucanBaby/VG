@@ -118,7 +118,7 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
 
     if True:
         loss_meter = AverageMeter()
-        score_loss_meter = AverageMeter()
+        score_meter = AverageMeter()
         l1_loss_meter = AverageMeter()
         iou_loss_meter = AverageMeter()
 
@@ -130,7 +130,7 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
         preds, loss_dict = network(sample, model, optimizer)
         if True:
             loss_meter.update(loss_dict['loss'].item(), 1)
-            score_loss_meter.update(loss_dict['score_loss'].item(), 1)
+            score_meter.update(loss_dict['score'].item(), 1)
             l1_loss_meter.update(loss_dict['l1_loss'].item(), 1)
             iou_loss_meter.update(loss_dict['iou_loss'].item(), 1)
         preds_dict.update(
@@ -140,10 +140,10 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
             }
         )
 
-        if cur_iter % 25 == 0:
-            message = 'lr: {}; '.format(optimizer.param_groups[0]['lr'])
+        if cur_iter % 400 == 0:
+            message = 'lr: {:.7f}; '.format(optimizer.param_groups[0]['lr'])
             message += 'avg_loss: {:.2f}; '.format(loss_meter.avg)
-            message += 'score_loss: {:.2f}; '.format(score_loss_meter.avg)
+            message += 'score: {:.2f}; '.format(score_meter.avg)
             message += 'l1_loss: {:.2f}; '.format(l1_loss_meter.avg)
             message += 'iou_loss: {:.2f}'.format(iou_loss_meter.avg)
             print(message)
@@ -153,6 +153,8 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
             result = eval.evaluate(sorted_preds, sorted_annotations)
             table_message = eval.display_results(result, 'performance on training set')
             print(table_message)
+
+            print('preds: {}'.format(preds[:, :3, :]))
 
         if args.debug:
             return

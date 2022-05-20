@@ -1,2 +1,2 @@
-# VMG
-This is project for Video Moment Grounding.
+# VG
+This is project for Video Grounding.

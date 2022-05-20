@@ -18,7 +18,9 @@ class VisualEncoder(nn.Module):
         drop_path = cfg.DROPPATH
 
         self.proj = nn.Linear(input_dim, dim)
-        self.sa_block = nn.ModuleList([SelfAttention(dim, heads, dropout=dropout, drop_path=drop_path) for _ in range(depth)])
+        self.sa_block = nn.ModuleList(
+            [SelfAttention(dim, heads, dropout=dropout, drop_path=drop_path) for _ in range(depth)]
+        )
 
         self.pos_embed = nn.Parameter(torch.zeros(tokens, dim))
         trunc_normal_(self.pos_embed, std=.02)

@@ -28,12 +28,12 @@ class Sequential(nn.Module):
             [CrossAttention(dim, dim, heads=heads, dropout=dropout, drop_path=drop_path) for _ in range(depth)]
         )
 
-        self.latent = nn.Parameter(torch.randn(tokens, dim))
-        trunc_normal_(self.latent, std=.02).clamp(0)
+        self.latent = nn.Parameter(torch.zeros(tokens, dim))
+        trunc_normal_(self.latent, std=.02)
 
     def forward(self, v_f, t_f):
         b, *_ = v_f.shape
-        latent = repeat(self.latent, "... -> b ...", b=b)
+        latent = repeat(self.latent, '... -> b ...', b=b)
 
         for sa, ca_v, ca_t in zip(self.sa_block, self.ca_v_block, self.ca_t_block):
             latent = sa(latent)

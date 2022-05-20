@@ -32,6 +32,8 @@ class GTR(nn.Module):
 
     def forward(self, visual_input, textual_input):
         # visual_input.shape: [B, 不定长, 1024], textual_input.shape: [B, 25, 300],
+        # TODO 把txt和video的token都padding到相同大小试试
+        # TODO 为什么输出的每一列的值都一样?
 
         v_f = self.visual_encoder(visual_input)
         # v_f.shape: [B, 不定长, 384]
@@ -41,6 +43,5 @@ class GTR(nn.Module):
 
         latent = self.decoder(v_f, t_f)
 
-        output = self.prediction(latent)
-
-        return output
+        preds = self.prediction(latent)
+        return preds
