@@ -105,7 +105,10 @@ class SetLoss(nn.Module):
         score = score.clamp(0, 1)
         l1_loss = self.cost_l1 * torch.abs(pred[:, 0] - gt[:, 0]) + torch.abs(pred[:, 1] - gt[:, 1])
         iou_loss = self.cost_iou * self.iou_loss(pred, gt)
-        loss = -score + l1_loss + iou_loss
+
+        # loss = -score + l1_loss + iou_loss
+
+        loss = l1_loss + iou_loss
         return loss, score, l1_loss, iou_loss
 
 
