@@ -23,53 +23,9 @@ from pathlib import Path
 from lib.datasets.dataset import MomentLocalizationDataset
 from lib.core.config import cfg, update_config
 from lib.core.utils import AverageMeter, create_logger
+from lib.utils.comm import synchronize, get_rank, cleanup
 import lib.models as models
 import lib.models.loss as loss
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description='Train localization network')
-
-    # general
-    parser.add_argument('--cfg', help='experiment configure file name', required=True, type=str)
-    args, rest = parser.parse_known_args()
-
-    # update config
-    update_config(args.cfg)
-
-    # training
-    parser.add_argument('--seed', help='seed', default=0, type=int)
-    parser.add_argument('--gpus', help='gpus', type=str)
-    parser.add_argument('--workers', help='num of dataloader workers', type=int)
-    parser.add_argument('--dataDir', help='data path', type=str)
-    parser.add_argument('--modelDir', help='model path', type=str)
-    parser.add_argument('--logDir', help='log path', type=str)
-    parser.add_argument('--verbose', default=False, action="store_true", help='print progress bar')
-    parser.add_argument('--tag', help='tags shown in log', type=str)
-    parser.add_argument('--mode', default='train', help='run test epoch only')
-    parser.add_argument('--split', help='test split', type=str)
-    parser.add_argument('--no_save', default=True, action="store_true", help='don\'t save checkpoint')
-    parser.add_argument('--debug', default=False, type=bool)
-    args = parser.parse_args()
-
-    return args
-
-
-def reset_config(config, args):
-    if args.gpus:
-        config.GPUS = args.gpus
-    if args.workers is not None:
-        config.WORKERS = args.workers
-    if args.dataDir:
-        config.DATASET.DATA_DIR = os.path.join(args.dataDir, config.DATASET.DATA_DIR)
-    if args.modelDir:
-        config.MODEL_DIR = args.modelDir
-    if args.logDir:
-        config.LOG_DIR = args.logDir
-    if args.tag:
-        config.TAG = args.tag
-    if args.debug:
-        config.debug = args.debug
 
 
 def collate_fn(batch):
@@ -140,7 +96,7 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
             }
         )
 
-        if cur_iter % 30 == 0:
+        if cur_iter % 50 == 0:
             message = 'lr: {:.7f}; '.format(optimizer.param_groups[0]['lr'])
             message += 'avg_loss: {:.2f}; '.format(loss_meter.avg)
             message += 'score: {:.2f}; '.format(score_meter.avg)
@@ -154,7 +110,7 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
             table_message = eval.display_results(result, 'performance on training set')
             print(table_message)
 
-            print('preds: {}'.format(preds[:, :3, :]))
+            print('preds: {}'.format(preds[:, 0, :]))
 
         if args.debug:
             return
@@ -248,7 +204,12 @@ def train(cfg, verbose):
         model.load_state_dict(model_checkpoint)
         print(f"loading checkpoint: {cfg.MODEL.CHECKPOINT}")
     device = ("cuda" if torch.cuda.is_available() else "cpu")
-    model = torch.nn.DataParallel(model)
+    # model = torch.nn.DataParallel(model)
+
+    model = torch.nn.parallel.DistributedDataParallel(
+        model, device_ids=[args.local_rank], output_device=args.local_rank,
+        find_unused_parameters=True, broadcast_buffers=False,
+    )
     model = model.to(device)
 
     # print FLOPs and Parameters
@@ -417,14 +378,69 @@ def test(cfg, split):
     print(eval.display_results(result, 'performance on {} set'.format(split)))
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Train localization network')
+
+    # general
+    parser.add_argument('--cfg', help='experiment configure file name', required=True, type=str)
+    args, rest = parser.parse_known_args()
+
+    # update config
+    update_config(args.cfg)
+
+    # training
+    parser.add_argument('--seed', help='seed', default=0, type=int)
+    parser.add_argument('--gpus', help='gpus', type=str)
+    parser.add_argument('--workers', help='num of dataloader workers', type=int)
+    parser.add_argument('--dataDir', help='data path', type=str)
+    parser.add_argument('--modelDir', help='model path', type=str)
+    parser.add_argument('--logDir', help='log path', type=str)
+    parser.add_argument('--verbose', default=False, action="store_true", help='print progress bar')
+    parser.add_argument('--tag', help='tags shown in log', type=str)
+    parser.add_argument('--mode', default='train', help='run test epoch only')
+    parser.add_argument('--split', help='test split', type=str)
+    parser.add_argument('--no_save', default=True, action="store_true", help='don\'t save checkpoint')
+    parser.add_argument('--debug', default=False, type=bool)
+    args = parser.parse_args()
+
+    return args
+
+
+def reset_config(config, args):
+    if args.gpus:
+        config.GPUS = args.gpus
+    if args.workers is not None:
+        config.WORKERS = args.workers
+    if args.dataDir:
+        config.DATASET.DATA_DIR = os.path.join(args.dataDir, config.DATASET.DATA_DIR)
+    if args.modelDir:
+        config.MODEL_DIR = args.modelDir
+    if args.logDir:
+        config.LOG_DIR = args.logDir
+    if args.tag:
+        config.TAG = args.tag
+    if args.debug:
+        config.debug = args.debug
+
+
 if __name__ == '__main__':
     args = parse_args()
+    reset_config(cfg, args)
 
+    np.random.seed(args.seed)
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed(args.seed)
     torch.autograd.set_detect_anomaly(True)
+    torch.backends.cudnn.deterministic = True
 
-    reset_config(cfg, args)
+    num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
+    args.distributed = num_gpus > 1
+
+    if args.distributed:
+        torch.cuda.set_device(args.local_rank)
+        torch.distributed.init_process_group(backend="nccl", init_method="env://")
+        synchronize()
+
     if args.mode == 'train':
         train(cfg, args.verbose)
     else:

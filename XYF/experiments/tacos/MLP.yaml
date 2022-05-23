@@ -29,7 +29,7 @@ LR_SCHEDULER:
     WARM_UP_EPOCH: 0
 
 TRAIN:
-  BATCH_SIZE: 6
+  BATCH_SIZE: 4
   MAX_EPOCH: 100
   CONTINUE: False
 
@@ -45,47 +45,6 @@ LOSS:
     COST_IOU: 1
 
 MODEL:
-  NAME: GTR
+  NAME: MLP
 
-  VISUAL_ENCODER:
-    NAME: VisualEncoder
-    PARAMS:
-      TOKENS: 768
-      INPUT_DIM: 1024
-      OUTPUT_DIM: 384
-      DEPTH: 4
-      HEADS: 8
-      DROPOUT: 0.0
-      DROPPATH: 0.0
-
-  TEXT_ENCODER:
-    NAME: TextEncoder
-    PARAMS:
-      TOKENS: 28
-      INPUT_DIM: 300
-      OUTPUT_DIM: 384
-      DEPTH: 4
-      HEADS: 8
-      DROPOUT: 0.0
-      DROPPATH: 0.0
-      RNN:
-        NAME: GRU
-        NUM_LAYERS: 3
-        BIDIRECTIONAL: True
-
-  DECODER:
-    NAME: Sequential
-    PARAMS:
-      TOKENS: 100
-      DIM: 384
-      DEPTH: 6
-      HEADS: 8
-      DROPOUT: 0.0
-      DROPPATH: 0.0
-
-  PREDICTION:
-    NAME: FFN
-    PARAMS:
-      INPUT_DIM: 384
-      HIDDEN_DIM: 384
 
