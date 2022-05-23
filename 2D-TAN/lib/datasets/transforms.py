@@ -1,5 +1,6 @@
 import torch
 
+
 def feature_temporal_sampling(num_samples, features):
     num_clips = features.shape[0]
     idxs = torch.arange(0, num_samples + 1, 1.0) / num_samples * num_clips

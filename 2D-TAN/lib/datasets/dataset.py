@@ -210,9 +210,6 @@ class MomentLocalizationDataset(DatasetBase):
                     )
         self.annotations = anno_pairs
 
-    def get_tvretrieval_annotations(self):
-        raise NotImplementedError
-
     def get_sliding_window_item(self, index):
         # index = 752#2548#3951#837#3951
         video_id = self.annotations[index]['video']
@@ -224,18 +221,22 @@ class MomentLocalizationDataset(DatasetBase):
         word_vectors, txt_mask = self.get_sentence_features(description)
         video_features, vis_mask = self.get_video_features(video_id)
 
+        # 未知
+        print('video_features.shape: {}'.format(video_features.shape))
         num_clips = video_features.shape[0]
-        # assert abs(num_clips*time_unit - duration) < 2*time_unit
 
+        # 这边是对其token
         if "train" in self.split:
             rand_s_idx = random.randrange(
                 num_clips - self.cfg.INPUT_NUM_CLIPS) if num_clips > self.cfg.INPUT_NUM_CLIPS else 0
             rand_e_idx = min(rand_s_idx + self.cfg.INPUT_NUM_CLIPS, num_clips)
             video_features = video_features[rand_s_idx:rand_e_idx]
             vis_mask = vis_mask[rand_s_idx:rand_e_idx]
+
             if self.cfg.INPUT_NUM_CLIPS > num_clips:
                 video_features = F.pad(video_features, [0, 0, 0, self.cfg.INPUT_NUM_CLIPS - num_clips])
                 vis_mask = F.pad(vis_mask, [0, 0, 0, self.cfg.INPUT_NUM_CLIPS - num_clips])
+
                 if isinstance(self.cfg.OUTPUT_NUM_CLIPS, int) and isinstance(self.cfg.NUM_ANCHORS, int):
                     downsample_rate = self.cfg.INPUT_NUM_CLIPS // self.cfg.OUTPUT_NUM_CLIPS
                     scale_num_clips = max(num_clips // downsample_rate, 1)

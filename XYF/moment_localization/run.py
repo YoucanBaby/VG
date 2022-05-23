@@ -204,12 +204,13 @@ def train(cfg, verbose):
         model.load_state_dict(model_checkpoint)
         print(f"loading checkpoint: {cfg.MODEL.CHECKPOINT}")
     device = ("cuda" if torch.cuda.is_available() else "cpu")
-    # model = torch.nn.DataParallel(model)
 
-    model = torch.nn.parallel.DistributedDataParallel(
-        model, device_ids=[args.local_rank], output_device=args.local_rank,
-        find_unused_parameters=True, broadcast_buffers=False,
-    )
+    # model = torch.nn.DataParallel(model)      # 这里改成了DDP
+    if args.distributed:
+        model = torch.nn.parallel.DistributedDataParallel(
+            model, device_ids=[args.local_rank], output_device=args.local_rank,
+            find_unused_parameters=True, broadcast_buffers=False,
+        )
     model = model.to(device)
 
     # print FLOPs and Parameters
