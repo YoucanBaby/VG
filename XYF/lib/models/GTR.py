@@ -30,9 +30,9 @@ class GTR(nn.Module):
             nn.init.constant_(m.bias, 0)
             nn.init.constant_(m.weight, 1.0)
 
-    def forward(self, visual_input, textual_input):
-        # visual_input.shape: [B, 不定长, 1024], textual_input.shape: [B, 25, 300],
-        # TODO 把txt和video的token都padding到相同大小试试
+    def forward(self, visual_input, textual_input, visual_mask, textual_mask):
+        # visual_input.shape: [B, 8416, 1024], textual_input.shape: [B, 46, 300],
+
         # TODO 为什么输出的每一列的值都一样?
 
         v_f = self.visual_encoder(visual_input)

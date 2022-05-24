@@ -36,6 +36,8 @@ def collate_fn(batch):
     batch_video_features = [b['video_features'] for b in batch]
     batch_text_features = [b['text_features'] for b in batch]
     batch_ground_truths = [b['ground_truth'] for b in batch]
+    batch_video_mask = [b['video_mask'] for b in batch]
+    batch_text_mask = [b['text_mask'] for b in batch]
 
     batch_data = {
         'batch_anno_idxs': batch_anno_idxs,
@@ -54,8 +56,10 @@ def network(sample, model, optimizer=None):
     visual_input = sample['batch_video_features']
     textual_input = sample['batch_text_features']
     gt = sample['batch_ground_truths']
+    visual_mask = sample['batch_video_mask']
+    textual_mask = sample['batch_text_mask']
 
-    preds = model(visual_input, textual_input)
+    preds = model(visual_input, textual_input, visual_mask, textual_mask)
     loss_dict = getattr(loss, cfg.LOSS.NAME)(preds, gt, duration)
     loss_value = loss_dict['loss']
 

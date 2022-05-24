@@ -160,22 +160,27 @@ class MomentLocalizationDataset(DatasetBase):
         ground_truth = self.annotations[index]['times']
 
         # video_features, vis_mask填充为[8416, 384]
-        num_clips = video_features.shape[0]
-        video_features = F.pad(video_features, [0, 0, 0, self.cfg.MAX_VIS_CLIPS - num_clips])
-        vis_mask = F.pad(vis_mask, [0, 0, 0, self.cfg.MAX_VIS_CLIPS - num_clips], value=-100.0)
+        num_tokens = video_features.shape[0]
+        video_features = F.pad(video_features, [0, 0, 0, self.cfg.MAX_VIS_TOKENS - num_tokens])
+        vis_mask = F.pad(vis_mask, [0, 0, 0, self.cfg.MAX_VIS_TOKENS - num_tokens], value=-100.0)
 
         # text_features, txt_mask填充为[46, 300]
-        num_clips = text_features.shape[0]
-        text_features = F.pad(text_features, [0, 0, 0, self.cfg.MAX_TXT_CLIPS - num_clips])
-        txt_mask = F.pad(txt_mask, [0, 0, 0, self.cfg.MAX_TXT_CLIPS - num_clips], value=-100.0)
+        num_tokens = text_features.shape[0]
+        text_features = F.pad(text_features, [0, 0, 0, self.cfg.MAX_TXT_TOKENS - num_tokens])
+        txt_mask = F.pad(txt_mask, [0, 0, 0, self.cfg.MAX_TXT_TOKENS - num_tokens], value=-100.0)
 
         item = {
             'anno_idx': index,
             'video_id': video_id,
             'duration': duration,
             'description': description,
+
             'video_features': video_features,
+            'video_mask': vis_mask,
+
             'text_features': text_features,
+            'text_mask': txt_mask,
+
             'ground_truth': ground_truth
         }
         return item
@@ -185,7 +190,7 @@ if __name__ == '__main__':
     file_path = os.path.join('data/TACoS', '{}.hdf5'.format('vgg_fc7'))
 
     # 查看视频最大token
-    if False:
+    if True:
         max_tokens = 0
         with open(os.path.join('data/TACoS', 'train.json')) as json_file:
             annotation = json.load(json_file)
@@ -195,9 +200,10 @@ if __name__ == '__main__':
                     features = torch.from_numpy(hdf5_file[video_id][:]).float()
                     max_tokens = max(max_tokens, features.shape[0])
         print(max_tokens)
+        print(features.shape)
 
     # 查看text的最大token
-    if True:
+    if False:
         vocab = torchtext.vocab.pretrained_aliases["glove.6B.300d"](
             cache=os.path.join('data/TACoS', '.vector_cache'))
         vocab.itos.extend(['<unk>'])
