@@ -4,14 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="2022.05.21">
+    <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="2022.05.23">
       <change beforePath="$PROJECT_DIR$/.idea/VG.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/VG.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-VGG.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-VGG.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/2D-TAN/lib/datasets/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/lib/datasets/dataset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2D-TAN/lib/datasets/transforms.py" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/lib/datasets/transforms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2D-TAN/lib/models/GTR.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2D-TAN/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/moment_localization/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/datasets/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/datasets/dataset.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +66,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/XYF/lib/models/gtr/text_encoder" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -89,6 +89,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
+      <changelist id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="2022.05.23" />
       <created>1652428585244</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -99,6 +100,7 @@
       <workItem from="1653297994596" duration="1019000" />
       <workItem from="1653299461181" duration="2382000" />
       <workItem from="1653305813053" duration="5596000" />
+      <workItem from="1653384728230" duration="3160000" />
     </task>
     <task id="LOCAL-00001" summary="2022.05.13">
       <created>1652435168260</created>
@@ -456,7 +458,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="2022.05.13" />

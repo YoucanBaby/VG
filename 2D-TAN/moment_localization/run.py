@@ -69,6 +69,8 @@ def reset_config(config, args):
         config.LOG_DIR = args.logDir
     if args.tag:
         config.TAG = args.tag
+    if args.debug:
+        config.DEBUG = args.debug
 
 
 def collate_fn(batch):
@@ -164,10 +166,10 @@ def network(sample, model, optimizer=None, return_map=False):
         loss_value.backward()
         optimizer.step()
 
-    if cfg.debug:
-        print('visual_input.shape: {}'.format(visual_input.shape))
-        print('textual_input.shape: {}'.format(textual_input.shape))
-        return
+    # if cfg.DEBUG:
+    #     print('visual_input.shape: {}'.format(visual_input.shape))
+    #     print('textual_input.shape: {}'.format(textual_input.shape))
+    #     return
 
     if return_map:
         return loss_value, sorted_times, joint_prob.detach().cpu()
@@ -221,6 +223,9 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
         sorted_segments_dict.update({idx: timestamp for idx, timestamp in zip(sample['batch_anno_idxs'], sorted_times)})
         if verbose:
             pbar.update(1)
+
+        if cfg.DEBUG:
+            return
 
     if verbose:
         pbar.close()

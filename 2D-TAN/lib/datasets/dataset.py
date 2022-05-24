@@ -222,11 +222,12 @@ class MomentLocalizationDataset(DatasetBase):
         video_features, vis_mask = self.get_video_features(video_id)
 
         # 未知
-        print('video_features.shape: {}'.format(video_features.shape))
         num_clips = video_features.shape[0]
+        # video_features.shape: torch.Size([384, 4096]), torch.Size([704, 4096]), torch.Size([993, 4096])
 
-        # 这边是对其token
+        # 这边是对齐token
         if "train" in self.split:
+            # 超过384, 就随机取384个clip；否则，全取
             rand_s_idx = random.randrange(
                 num_clips - self.cfg.INPUT_NUM_CLIPS) if num_clips > self.cfg.INPUT_NUM_CLIPS else 0
             rand_e_idx = min(rand_s_idx + self.cfg.INPUT_NUM_CLIPS, num_clips)
@@ -234,6 +235,7 @@ class MomentLocalizationDataset(DatasetBase):
             vis_mask = vis_mask[rand_s_idx:rand_e_idx]
 
             if self.cfg.INPUT_NUM_CLIPS > num_clips:
+                # 少了，补clip
                 video_features = F.pad(video_features, [0, 0, 0, self.cfg.INPUT_NUM_CLIPS - num_clips])
                 vis_mask = F.pad(vis_mask, [0, 0, 0, self.cfg.INPUT_NUM_CLIPS - num_clips])
 

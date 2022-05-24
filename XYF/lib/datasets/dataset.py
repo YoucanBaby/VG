@@ -48,7 +48,8 @@ class DatasetBase(data.Dataset):
             features = torch.from_numpy(hdf5_file[video_id][:]).float()
         if self.cfg.NORMALIZE:
             features = F.normalize(features, dim=1)
-        return features
+        mask = torch.ones(features.shape[0], 1)
+        return features, mask
 
     def __getitem__(self, index):
         return self.get_item(index)
@@ -83,7 +84,7 @@ class MomentLocalizationDataset(DatasetBase):
             word_vectors = self.word_embedding(word_idxs)
         else:
             raise NotImplementedError
-        return word_vectors
+        return word_vectors, torch.ones(word_vectors.shape[0], 1)
 
     def get_activitynet_annotations(self):
         with open(os.path.join(self.cfg.DATA_DIR, '{}.json'.format(self.split)), 'r') as f:
@@ -154,9 +155,19 @@ class MomentLocalizationDataset(DatasetBase):
         video_id = self.annotations[index]['video']
         duration = self.annotations[index]['duration']
         description = self.annotations[index]['description']
-        video_features = self.get_video_features(video_id)
-        text_features = self.get_sentence_features(description)
+        video_features, vis_mask = self.get_video_features(video_id)
+        text_features, txt_mask = self.get_sentence_features(description)
         ground_truth = self.annotations[index]['times']
+
+        # video_features, vis_mask填充为[8416, 384]
+        num_clips = video_features.shape[0]
+        video_features = F.pad(video_features, [0, 0, 0, self.cfg.MAX_VIS_CLIPS - num_clips])
+        vis_mask = F.pad(vis_mask, [0, 0, 0, self.cfg.MAX_VIS_CLIPS - num_clips], value=-100.0)
+
+        # text_features, txt_mask填充为[46, 300]
+        num_clips = text_features.shape[0]
+        text_features = F.pad(text_features, [0, 0, 0, self.cfg.MAX_TXT_CLIPS - num_clips])
+        txt_mask = F.pad(txt_mask, [0, 0, 0, self.cfg.MAX_TXT_CLIPS - num_clips], value=-100.0)
 
         item = {
             'anno_idx': index,
@@ -168,3 +179,39 @@ class MomentLocalizationDataset(DatasetBase):
             'ground_truth': ground_truth
         }
         return item
+
+
+if __name__ == '__main__':
+    file_path = os.path.join('data/TACoS', '{}.hdf5'.format('vgg_fc7'))
+
+    # 查看视频最大token
+    if False:
+        max_tokens = 0
+        with open(os.path.join('data/TACoS', 'train.json')) as json_file:
+            annotation = json.load(json_file)
+            for video_id in annotation.keys():
+                video_id = video_id.split('.')[0]
+                with h5py.File(file_path, 'r') as hdf5_file:
+                    features = torch.from_numpy(hdf5_file[video_id][:]).float()
+                    max_tokens = max(max_tokens, features.shape[0])
+        print(max_tokens)
+
+    # 查看text的最大token
+    if True:
+        vocab = torchtext.vocab.pretrained_aliases["glove.6B.300d"](
+            cache=os.path.join('data/TACoS', '.vector_cache'))
+        vocab.itos.extend(['<unk>'])
+        vocab.stoi['<unk>'] = vocab.vectors.shape[0]
+        vocab.vectors = torch.cat([vocab.vectors, torch.zeros(1, vocab.dim)], dim=0)
+        word_embedding = nn.Embedding.from_pretrained(vocab.vectors)
+
+        max_tokens = 0
+        with open(os.path.join('data/TACoS', 'train.json')) as json_file:
+            annotation = json.load(json_file)
+            for video_id in annotation.keys():
+                for description in annotation[video_id]['sentences']:
+                    word_idxs = torch.tensor([vocab.stoi.get(w.lower(), 400000) for w in description.split()],
+                                             dtype=torch.long)
+                    word_vectors = word_embedding(word_idxs)
+                    max_tokens = max(max_tokens, word_vectors.shape[0])
+            print(max_tokens)
