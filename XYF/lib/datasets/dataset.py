@@ -162,12 +162,12 @@ class MomentLocalizationDataset(DatasetBase):
         # video_features, vis_mask填充为[8416, 384]
         num_tokens = video_features.shape[0]
         video_features = F.pad(video_features, [0, 0, 0, self.cfg.MAX_VIS_TOKENS - num_tokens])
-        vis_mask = F.pad(vis_mask, [0, 0, 0, self.cfg.MAX_VIS_TOKENS - num_tokens], value=-100.0)
+        # vis_mask = F.pad(vis_mask, [0, 0, 0, self.cfg.MAX_VIS_TOKENS - num_tokens], value=-100.0)
 
         # text_features, txt_mask填充为[46, 300]
         num_tokens = text_features.shape[0]
         text_features = F.pad(text_features, [0, 0, 0, self.cfg.MAX_TXT_TOKENS - num_tokens])
-        txt_mask = F.pad(txt_mask, [0, 0, 0, self.cfg.MAX_TXT_TOKENS - num_tokens], value=-100.0)
+        # txt_mask = F.pad(txt_mask, [0, 0, 0, self.cfg.MAX_TXT_TOKENS - num_tokens], value=-100.0)
 
         item = {
             'anno_idx': index,
