@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="2022.05.23">
-      <change beforePath="$PROJECT_DIR$/.idea/VG.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/VG.iml" afterDir="false" />
+    <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="2022.05.24">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-VGG.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/experiments/tacos/MS-2D-TAN-G-VGG.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2D-TAN/lib/datasets/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/lib/datasets/dataset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2D-TAN/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/moment_localization/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/datasets/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/datasets/dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2D-TAN/lib/core/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/2D-TAN/lib/core/config.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +95,7 @@
       <workItem from="1653297994596" duration="1019000" />
       <workItem from="1653299461181" duration="2382000" />
       <workItem from="1653305813053" duration="5596000" />
-      <workItem from="1653384728230" duration="3160000" />
+      <workItem from="1653384728230" duration="3278000" />
     </task>
     <task id="LOCAL-00001" summary="2022.05.13">
       <created>1652435168260</created>
@@ -431,7 +426,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653125180488</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="2022.05.24">
+      <created>1653388547401</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1653388547401</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -470,7 +472,8 @@
     <MESSAGE value="2022.05.19" />
     <MESSAGE value="2022.05.20" />
     <MESSAGE value="2022.05.21" />
-    <option name="LAST_COMMIT_MESSAGE" value="2022.05.21" />
+    <MESSAGE value="2022.05.24" />
+    <option name="LAST_COMMIT_MESSAGE" value="2022.05.24" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
