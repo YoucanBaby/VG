@@ -1,5 +1,6 @@
 import torch
 from timm.models.layers import trunc_normal_
+from einops import rearrange, repeat
 from torch import nn
 from lib.models.utils.attention import SelfAttention
 
@@ -28,8 +29,8 @@ class VisualEncoder(nn.Module):
         b, *_ = x.shape
         x = self.proj(x)
 
-        # pos_embed = repeat(self.pos_embed, "... -> b ...", b=b)
-        # x = x + pos_embed
+        pos_embed = repeat(self.pos_embed, "... -> b ...", b=b)
+        x = x + pos_embed
 
         for sa in self.sa_block:
             x = sa(x)

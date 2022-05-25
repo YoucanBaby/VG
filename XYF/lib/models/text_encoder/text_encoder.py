@@ -1,6 +1,7 @@
 import torch
 from timm.models.layers import trunc_normal_
 from torch import nn
+from einops import rearrange, repeat
 from lib.models.utils.attention import SelfAttention
 
 
@@ -40,8 +41,8 @@ class TextEncoder(nn.Module):
         self.rnn.flatten_parameters()
         x = self.rnn(x)[0]
 
-        # pos_embed = repeat(self.pos_embed, "... -> b ...", b=b)
-        # x = x + pos_embed
+        pos_embed = repeat(self.pos_embed, "... -> b ...", b=b)
+        x = x + pos_embed
 
         for sa in self.sa_block:
             x = sa(x)

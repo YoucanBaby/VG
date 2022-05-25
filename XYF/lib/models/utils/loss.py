@@ -63,11 +63,11 @@ def get_best_pred(preds, gt, duration):
     gt = repeat(gt, 'b d -> b n d', n=n)
     duration = repeat(duration, 'b d -> b n d', n=n)
 
-    norm_score = preds[:, :, 2] / 100
-    norm_times = preds[:, :, :2] / duration
+    score = preds[:, :, 2]
+    times = preds[:, :, :2]
     norm_gt = gt / duration
 
-    match_loss = _match_loss(norm_score, norm_times, norm_gt)
+    match_loss = _match_loss(score, times, norm_gt)
     index = torch.argmin(match_loss, dim=1)
 
     best_pred = torch.stack([preds[i, j] for i, j in enumerate(index)])
@@ -100,15 +100,20 @@ class SetLoss(nn.Module):
         return -torch.log(iou)
 
     def forward(self, score, pred, gt):
-        # score = score.add(1e-2).clamp(0, 1)
-        # score_loss = -torch.log(score)
-        score = score.clamp(0, 1)
+        if cfg.LOSS.PARAMS.USE_SCORE_LOSS:
+            score_loss = torch.log(score)
+
         l1_loss = self.cost_l1 * torch.abs(pred[:, 0] - gt[:, 0]) + torch.abs(pred[:, 1] - gt[:, 1])
         iou_loss = self.cost_iou * self.iou_loss(pred, gt)
 
-        # loss = -score + l1_loss + iou_loss
+        if cfg.LOSS.PARAMS.USE_SCORE_LOSS:
+            loss = -score_loss + l1_loss + iou_loss
+        else:
+            if cfg.LOSS.PARAM.USE_SCORE:
+                loss = -score + l1_loss + iou_loss
+            else:
+                loss = l1_loss + iou_loss
 
-        loss = l1_loss + iou_loss
         return loss, score, l1_loss, iou_loss
 
 
@@ -129,17 +134,15 @@ def many_to_one_loss(preds, gt, duration):
 
     best_pred = get_best_pred(preds, gt, duration)
 
-    norm_score = (best_pred[:, 2] / 100).clamp(min=0, max=1)
-    norm_times = (best_pred[:, :2] / duration).clamp(min=0, max=1)
+    score = best_pred[:, 2]
+    times = best_pred[:, :2]
     norm_gt = gt / duration
 
     criterion = SetLoss()
-    loss, score, l1_loss, iou_loss = criterion(norm_score, norm_times, norm_gt)
+    loss, score, l1_loss, iou_loss = criterion(score, times, norm_gt)
 
     loss_value = loss.sum() / b
     score_value = score.sum() / b
-
-    # print(score, score_value.sum(), b)
 
     l1_loss_value = l1_loss.sum() / b
     iou_loss_value = iou_loss.sum() / b

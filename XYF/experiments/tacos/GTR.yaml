@@ -15,13 +15,14 @@ DATASET:
   NO_TEST: False
   VIS_INPUT_TYPE: i3d_imagenet
   TXT_INPUT_TYPE: glove
-  MAX_VIS_TOKENS: 8416
-  MAX_TXT_TOKENS: 46
+  SAMPLE_FEATURE: True
+  MAX_VIS_TOKENS: 1200
+  MAX_TXT_TOKENS: 40
 
 OPTIM:
   NAME: AdamW
   PARAMS:
-    LR: 0.0005
+    LR: 0.0001
     WEIGHT_DECAY: 0.0001
 
 LR_SCHEDULER:
@@ -30,30 +31,34 @@ LR_SCHEDULER:
     WARM_UP_EPOCH: 0
 
 TRAIN:
-  BATCH_SIZE: 6
+  BATCH_SIZE: 16
   MAX_EPOCH: 100
   CONTINUE: False
 
 TEST:
-  BATCH_SIZE: 1
+  BATCH_SIZE: 16
   RECALL: [1,5]
   TIOU: [0.1,0.3,0.5,0.7]
 
 LOSS:
   NAME: many_to_one_loss
   PARAMS:
-    COST_L1: 8
-    COST_IOU: 1
+    COST_L1: 10
+    COST_IOU: 2
+    USE_SCORE_LOSS: True
+    USE_SCORE: False
 
 MODEL:
   NAME: GTR
+  PARAMS:
+    DIM: 320
 
   VISUAL_ENCODER:
     NAME: VisualEncoder
     PARAMS:
-      TOKENS: 768
+      TOKENS: 1200
       INPUT_DIM: 1024
-      OUTPUT_DIM: 384
+      OUTPUT_DIM: 320
       DEPTH: 4
       HEADS: 8
       DROPOUT: 0.0
@@ -62,9 +67,9 @@ MODEL:
   TEXT_ENCODER:
     NAME: TextEncoder
     PARAMS:
-      TOKENS: 28
+      TOKENS: 40
       INPUT_DIM: 300
-      OUTPUT_DIM: 384
+      OUTPUT_DIM: 320
       DEPTH: 4
       HEADS: 8
       DROPOUT: 0.0
@@ -78,15 +83,9 @@ MODEL:
     NAME: Sequential
     PARAMS:
       TOKENS: 100
-      DIM: 384
+      DIM: 320
       DEPTH: 6
       HEADS: 8
       DROPOUT: 0.0
       DROPPATH: 0.0
-
-  PREDICTION:
-    NAME: FFN
-    PARAMS:
-      INPUT_DIM: 384
-      HIDDEN_DIM: 384
 

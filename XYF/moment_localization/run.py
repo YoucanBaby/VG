@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
-from fvcore.nn import flop_count
+from fvcore.nn import flop_count, flop_count_str, FlopCountAnalysis
 import math
 
 import eval
@@ -31,9 +31,9 @@ def collate_fn(batch):
     batch_duration = [b['duration'] for b in batch]
     batch_description = [b['description'] for b in batch]
 
-    batch_v_feature = [b['v_feature'] for b in batch]
+    batch_v_feat = [b['v_feat'] for b in batch]
     batch_v_mask = [b['v_mask'] for b in batch]
-    batch_t_feature = [b['t_feature'] for b in batch]
+    batch_t_feat = [b['t_feat'] for b in batch]
     batch_t_mask = [b['t_mask'] for b in batch]
 
     batch_gt = [b['gt'] for b in batch]
@@ -44,9 +44,9 @@ def collate_fn(batch):
         'batch_duration': batch_duration,
         'batch_description': batch_description,
 
-        'batch_v_feature': nn.utils.rnn.pad_sequence(batch_v_feature, batch_first=True),
+        'batch_v_feat': nn.utils.rnn.pad_sequence(batch_v_feat, batch_first=True),
         'batch_v_mask': batch_v_mask,
-        'batch_t_feature': nn.utils.rnn.pad_sequence(batch_t_feature, batch_first=True),
+        'batch_t_feat': nn.utils.rnn.pad_sequence(batch_t_feat, batch_first=True),
         'batch_t_mask': batch_t_mask,
 
         'batch_gt': batch_gt
@@ -58,13 +58,17 @@ def network(sample, model, optimizer=None):
     duration = sample['batch_duration']
     gt = sample['batch_gt']
 
-    v_input = sample['batch_v_feature']
+    v_input = sample['batch_v_feat']
     v_mask = sample['batch_v_mask']
 
-    t_input = sample['batch_t_feature']
+    t_input = sample['batch_t_feat']
     t_mask = sample['batch_t_mask']
 
-    preds = model(v_input, v_mask, t_input, t_mask)
+    if cfg.DATASET.SAMPLE_FEATURE:
+        preds = model(v_input, t_input)
+    else:
+        preds = model(v_input, t_input, v_mask, t_mask)
+
     loss_dict = getattr(loss, cfg.LOSS.NAME)(preds, gt, duration)
     loss_value = loss_dict['loss']
 
@@ -100,12 +104,12 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
             iou_loss_meter.update(loss_dict['iou_loss'].item(), 1)
         preds_dict.update(
             {
-                idx: timestamp
-                for idx, timestamp in zip(sample['batch_anno_idxs'], preds[:, :, :2].detach().cpu().numpy().tolist())
+                idx: pred
+                for idx, pred in zip(sample['batch_anno_idx'], preds.detach().cpu().numpy().tolist())
             }
         )
 
-        if cur_iter % 50 == 0:
+        if cur_iter % 30 == 0:
             message = 'lr: {:.7f}; '.format(optimizer.param_groups[0]['lr'])
             message += 'avg_loss: {:.2f}; '.format(loss_meter.avg)
             message += 'score: {:.2f}; '.format(score_meter.avg)
@@ -119,7 +123,7 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
             table_message = eval.display_results(result, 'performance on training set')
             print(table_message)
 
-            print('preds: {}'.format(preds[:, 0, :]))
+            # print('preds: {}'.format(preds[:2, :4, :]))
 
         if args.debug:
             return
@@ -143,7 +147,7 @@ def test_epoch(test_loader, model, verbose=False, save_results=False):
 
     if True:
         loss_meter = AverageMeter()
-        score_loss_meter = AverageMeter()
+        score_meter = AverageMeter()
         l1_loss_meter = AverageMeter()
         iou_loss_meter = AverageMeter()
 
@@ -157,21 +161,20 @@ def test_epoch(test_loader, model, verbose=False, save_results=False):
         preds, loss_dict = network(sample, model)
         if True:
             loss_meter.update(loss_dict['loss'].item(), 1)
-            score_loss_meter.update(loss_dict['score_loss'].item(), 1)
+            score_meter.update(loss_dict['score'].item(), 1)
             l1_loss_meter.update(loss_dict['l1_loss'].item(), 1)
             iou_loss_meter.update(loss_dict['iou_loss'].item(), 1)
         preds_dict.update(
             {
                 idx: timestamp
-                for idx, timestamp in zip(sample['batch_anno_idxs'], preds[:, :, :2].detach().cpu().numpy().tolist())
+                for idx, timestamp in zip(sample['batch_anno_idx'], preds.detach().cpu().numpy().tolist())
             }
         )
-        saved_dict.update({idx: {'vid': vid, 'timestamps': timestamp, 'description': description}
-                           for idx, vid, timestamp, description in zip(sample['batch_anno_idxs'],
-                                                                       sample['batch_video_ids'],
-                                                                       sample['batch_descriptions'],
-                                                                       preds[:, :,
-                                                                       :2].detach().cpu().numpy().tolist())})
+        saved_dict.update({idx: {'vid': vid, 'preds': preds, 'description': description}
+                           for idx, vid, description, preds in zip(sample['batch_anno_idx'],
+                                                                       sample['batch_video_id'],
+                                                                       sample['batch_description'],
+                                                                       preds.detach().cpu().numpy().tolist())})
         if verbose:
             pbar.update(1)
 
@@ -206,7 +209,7 @@ def train(cfg, verbose):
     torch.backends.cudnn.deterministic = cfg.CUDNN.DETERMINISTIC
 
     init_epoch = 0
-    model = getattr(models, cfg.MODEL.NAME)(cfg.MODEL)
+    model = getattr(models, cfg.MODEL.NAME)()
     if cfg.MODEL.CHECKPOINT and cfg.TRAIN.CONTINUE:
         init_epoch = int(os.path.basename(cfg.MODEL.CHECKPOINT)[5:9]) + 1
         model_checkpoint = torch.load(cfg.MODEL.CHECKPOINT)
@@ -214,7 +217,7 @@ def train(cfg, verbose):
         print(f"loading checkpoint: {cfg.MODEL.CHECKPOINT}")
     device = ("cuda" if torch.cuda.is_available() else "cpu")
 
-    # model = torch.nn.DataParallel(model)      # 这里改成了DDP
+    model = torch.nn.DataParallel(model)      # 这里改成了DDP
     if args.distributed:
         model = torch.nn.parallel.DistributedDataParallel(
             model, device_ids=[args.local_rank], output_device=args.local_rank,
@@ -224,13 +227,17 @@ def train(cfg, verbose):
 
     # print FLOPs and Parameters
     if True:
-        v_feat, v_mask = torch.zeros([1, 768, 1024], device=device), torch.zeros([1, 1024, 1024], device=device)
-        t_feat, t_mask = torch.zeros([1, 46, 300], device=device), torch.zeros([1, 26, 300], device=device)
-        count_dict, *_ = flop_count(model, (v_feat, v_mask, t_feat, t_mask))
+        num_v_tokens, num_t_tokens = cfg.DATASET.MAX_VIS_TOKENS, cfg.DATASET.MAX_TXT_TOKENS
+        v_feat, v_mask = torch.zeros([1, num_v_tokens, 1024], device=device), torch.zeros([1, num_v_tokens, 1024], device=device)
+        t_feat, t_mask = torch.zeros([1, num_t_tokens, 300], device=device), torch.zeros([1, num_t_tokens, 300], device=device)
+        if cfg.DATASET.SAMPLE_FEATURE:
+            count_dict, *_ = flop_count(model, (v_feat, t_feat))
+        else:
+            count_dict, *_ = flop_count(model, (v_feat, t_feat, v_mask, t_mask))
         count = sum(count_dict.values())
         n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
-        # logger.info(flop_count_str(FlopCountAnalysis(model, (v_feat, t_feat))))
+        logger.info(flop_count_str(FlopCountAnalysis(model, (v_feat, t_feat))))
         logger.info('{:<30}  {:.1f} GFlops'.format('number of FLOPs: ', count))
         logger.info('{:<30}  {:.1f} MB'.format('number of params: ', n_parameters / 1000 ** 2))
 
@@ -251,9 +258,7 @@ def train(cfg, verbose):
         lr_lambda = lambda epoch: (0.9 * epoch / t + 0.1) if epoch < t else 0.1 if 0.5 * (
                 1 + math.cos(math.pi * (epoch - t) / (T - t))) < 0.1 else 0.5 * (
                 1 + math.cos(math.pi * (epoch - t) / (T - t)))
-        scheduler = optim.lr_scheduler.LambdaLR(optimizer,
-                                                lr_lambda=lr_lambda)
-
+        scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lr_lambda)
     else:
         raise NotImplementedError
 
@@ -411,6 +416,7 @@ def parse_args():
     parser.add_argument('--split', help='test split', type=str)
     parser.add_argument('--no_save', default=True, action="store_true", help='don\'t save checkpoint')
     parser.add_argument('--debug', default=False, type=bool)
+    # parser.add_argument('local_rank')
     args = parser.parse_args()
 
     return args
@@ -444,7 +450,8 @@ if __name__ == '__main__':
     torch.backends.cudnn.deterministic = True
 
     num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
-    args.distributed = num_gpus > 1
+    args.distributed = False
+    # args.distributed = num_gpus > 1
 
     if args.distributed:
         torch.cuda.set_device(args.local_rank)

@@ -5,19 +5,23 @@ from torch import nn
 import lib.models.visual_encoder as visual_encoder
 import lib.models.text_encoder as text_encoder
 import lib.models.decoder as decoder
-import lib.models.prediction as prediction
+from lib.core.config import cfg
+from lib.models.utils.prediction import Prediction
 
 
 class GTR(nn.Module):
 
-    def __init__(self, cfg):
+    def __init__(self):
         super(GTR, self).__init__()
         self.cfg = cfg
 
-        self.visual_encoder = getattr(visual_encoder, cfg.VISUAL_ENCODER.NAME)(cfg.VISUAL_ENCODER.PARAMS)
-        self.text_encoder = getattr(text_encoder, cfg.TEXT_ENCODER.NAME)(cfg.TEXT_ENCODER.PARAMS)
-        self.decoder = getattr(decoder, cfg.DECODER.NAME)(cfg.DECODER.PARAMS)
-        self.prediction = getattr(prediction, cfg.PREDICTION.NAME)(cfg.PREDICTION.PARAMS)
+        self.visual_encoder = getattr(visual_encoder,
+                                      cfg.MODEL.VISUAL_ENCODER.NAME)(cfg.MODEL.VISUAL_ENCODER.PARAMS)
+        self.text_encoder = getattr(text_encoder,
+                                    cfg.MODEL.TEXT_ENCODER.NAME)(cfg.MODEL.TEXT_ENCODER.PARAMS)
+        self.decoder = getattr(decoder,
+                               cfg.MODEL.DECODER.NAME)(cfg.MODEL.DECODER.PARAMS)
+        self.prediction = Prediction(dim=cfg.MODEL.PARAMS.DIM)
 
         self.apply(self._init_weights)
 
@@ -30,16 +34,14 @@ class GTR(nn.Module):
             nn.init.constant_(m.bias, 0)
             nn.init.constant_(m.weight, 1.0)
 
-    def forward(self, v_input, v_mask, t_input, t_mask):
-        # v_input.shape: [B, 8416, 1024], t_input.shape: [B, 46, 300],
-
-        # TODO 为什么输出的每一列的值都一样?
+    def forward(self, v_input, t_input, v_mask=None, t_mask=None):
+        # v_input.shape: [B, 384, 1024], t_input.shape: [B, 46, 300],
 
         v_f = self.visual_encoder(v_input)
-        # v_f.shape: [B, 不定长, 384]
+        # v_f.shape: [B, 384, 320]
 
         t_f = self.text_encoder(t_input)
-        # t_f.shape: [B, 不定长, 384]
+        # t_f.shape: [B, 18, 320]
 
         latent = self.decoder(v_f, t_f)
 

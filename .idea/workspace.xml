@@ -4,13 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="2022.05.24">
+    <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="2022.05.25">
+      <change afterPath="$PROJECT_DIR$/XYF/lib/models/utils/prediction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/VG.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/VG.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/MLP.yaml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/XYF.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/XYF.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/lib/core/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/core/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/datasets/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/datasets/dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/GTR.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/GTR.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/MLP.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/lib/models/XYF.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/XYF.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/decoder/sequential.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/decoder/sequential.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/prediction/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/prediction/ffn.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/text_encoder/text_encoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/text_encoder/text_encoder.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/lib/models/utils/attention.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/utils/attention.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/utils/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/utils/loss.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/lib/models/visual_encoder/visual_encoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/visual_encoder/visual_encoder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/moment_localization/eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/eval.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -103,13 +117,8 @@
       <workItem from="1653305813053" duration="5596000" />
       <workItem from="1653384728230" duration="5243000" />
       <workItem from="1653392179444" duration="3100000" />
-    </task>
-    <task id="LOCAL-00002" summary="2022.05.16">
-      <created>1652639243156</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1652639243156</updated>
+      <workItem from="1653497303061" duration="23000" />
+      <workItem from="1653497348194" duration="8893000" />
     </task>
     <task id="LOCAL-00003" summary="2022.05.16">
       <created>1652641724184</created>
@@ -447,7 +456,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653392123368</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="2022.05.25">
+      <created>1653442274236</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1653442274236</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -487,7 +503,8 @@
     <MESSAGE value="2022.05.20" />
     <MESSAGE value="2022.05.21" />
     <MESSAGE value="2022.05.24" />
-    <option name="LAST_COMMIT_MESSAGE" value="2022.05.24" />
+    <MESSAGE value="2022.05.25" />
+    <option name="LAST_COMMIT_MESSAGE" value="2022.05.25" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

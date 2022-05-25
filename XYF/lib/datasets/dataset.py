@@ -150,24 +150,37 @@ class MomentLocalizationDataset(DatasetBase):
                     )
         self.annotations = anno_pairs
 
+    def sample_item(self, x, max_tokens):
+        x_h, _ = x.shape
+        if x_h <= max_tokens:
+            x = F.pad(x, [0, 0, 0, max_tokens - x_h])
+        else:
+            random_list = random.sample(range(x_h), max_tokens)
+            random_list.sort()
+            x = torch.stack([x[i] for i in random_list])
+        return x
+
     def get_item(self, index):
         # index = 752#2548#3951#837#3951
         video_id = self.annotations[index]['video']
         duration = self.annotations[index]['duration']
         description = self.annotations[index]['description']
-        v_feature, v_mask = self.get_video_features(video_id)
-        t_feature, t_mask = self.get_sentence_features(description)
+        v_feat, v_mask = self.get_video_features(video_id)
+        t_feat, t_mask = self.get_sentence_features(description)
         gt = self.annotations[index]['times']
 
-        # v_feature, vis_mask填充为[8416, 384]
-        num_tokens = v_feature.shape[0]
-        v_feature = F.pad(v_feature, [0, 0, 0, self.cfg.MAX_VIS_TOKENS - num_tokens])
-        # v_mask = F.pad(v_mask, [0, 0, 0, self.cfg.MAX_VIS_TOKENS - num_tokens], value=-100.0)
-
-        # t_feature, txt_mask填充为[46, 300]
-        num_tokens = t_feature.shape[0]
-        t_feature = F.pad(t_feature, [0, 0, 0, self.cfg.MAX_TXT_TOKENS - num_tokens])
-        # t_mask = F.pad(t_mask, [0, 0, 0, self.cfg.MAX_TXT_TOKENS - num_tokens], value=-100.0)
+        if self.cfg.SAMPLE_FEATURE:
+            v_feat = self.sample_item(v_feat, self.cfg.MAX_VIS_TOKENS)       # [384, 4096]
+            t_feat = self.sample_item(t_feat, self.cfg.MAX_TXT_TOKENS)       # [36, 300]
+            v_mask, t_mask = None, None
+        else:
+            v_h, t_h = v_feat.shape[0], t_feat.shape[0]
+            # v_feat, vis_mask填充为[384, 4096]
+            v_feat = F.pad(v_feat, [0, 0, 0, self.cfg.MAX_VIS_TOKENS - v_h])
+            t_feat = F.pad(t_feat, [0, 0, 0, self.cfg.MAX_TXT_TOKENS - t_h])
+            # t_feat, txt_mask填充为[36, 300]
+            v_mask = F.pad(v_mask, [0, 0, 0, self.cfg.MAX_VIS_TOKENS - v_h], value=0)
+            t_mask = F.pad(t_mask, [0, 0, 0, self.cfg.MAX_TXT_TOKENS - t_h], value=0)
 
         item = {
             'anno_idx': index,
@@ -175,10 +188,10 @@ class MomentLocalizationDataset(DatasetBase):
             'duration': duration,
             'description': description,
 
-            'v_feature': v_feature,
+            'v_feat': v_feat,
             'v_mask': v_mask,
 
-            't_feature': t_feature,
+            't_feat': t_feat,
             't_mask': t_mask,
 
             'gt': gt
@@ -189,9 +202,10 @@ class MomentLocalizationDataset(DatasetBase):
 if __name__ == '__main__':
     file_path = os.path.join('data/TACoS', '{}.hdf5'.format('vgg_fc7'))
 
-    # 查看视频最大token
+    # 查看视频最大token, 查看视频所有的token
     if False:
         max_tokens = 0
+        token_list = []
         with open(os.path.join('data/TACoS', 'train.json')) as json_file:
             annotation = json.load(json_file)
             for video_id in annotation.keys():
@@ -199,10 +213,13 @@ if __name__ == '__main__':
                 with h5py.File(file_path, 'r') as hdf5_file:
                     features = torch.from_numpy(hdf5_file[video_id][:]).float()
                     max_tokens = max(max_tokens, features.shape[0])
+                    token_list.append(features.shape[0])
+        token_list.sort()
         print(max_tokens)
         print(features.shape)
+        print(token_list, token_list[len(token_list) // 2])
 
-    # 查看text的最大token
+    # 查看text的最大token, 查看text所有的token
     if False:
         vocab = torchtext.vocab.pretrained_aliases["glove.6B.300d"](
             cache=os.path.join('data/TACoS', '.vector_cache'))
@@ -212,6 +229,7 @@ if __name__ == '__main__':
         word_embedding = nn.Embedding.from_pretrained(vocab.vectors)
 
         max_tokens = 0
+        token_list = []
         with open(os.path.join('data/TACoS', 'train.json')) as json_file:
             annotation = json.load(json_file)
             for video_id in annotation.keys():
@@ -220,4 +238,7 @@ if __name__ == '__main__':
                                              dtype=torch.long)
                     word_vectors = word_embedding(word_idxs)
                     max_tokens = max(max_tokens, word_vectors.shape[0])
+                    token_list.append(word_vectors.shape[0])
             print(max_tokens)
+            token_list.sort()
+            print(token_list, token_list[len(token_list) // 2])

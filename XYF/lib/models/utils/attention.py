@@ -63,17 +63,14 @@ class Attention(nn.Module):
             nn.Dropout(dropout)
         )
 
-    def forward(self, x, kv=None):
-        q = self.to_q(x)
-
+    def forward(self, q, kv=None):
         if kv is None:
-            kv = x
+            kv = q
+
+        q = self.to_q(q)
         k, v = self.to_kv(kv).chunk(2, dim=-1)
 
         q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> (b h) n d', h=self.heads), (q, k, v))
-
-        # TODO fix bug 可能token数量不同造成了bug，在dataset中padding或sample特征
-        # print(q.shape, k.shape)
 
         dots = einsum('b i d, b j d -> b i j', q, k) * self.scale
 

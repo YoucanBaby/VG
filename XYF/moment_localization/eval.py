@@ -9,7 +9,7 @@ from lib.core.utils import iou
 
 def get_iou(pred, gt, duration):
     '''
-    :param pred: np.size([100, 2])
+    :param pred: np.size([100, 3])
     :param gt: np.size([1, 2])
     :return: np.size([100])
     '''
@@ -38,17 +38,17 @@ def evaluate(preds, annotations):
     max_iou_dict = []
 
     for pred, data in zip(preds, annotations):
-        gt = data['times']
         duration = data['duration']
+        gt = data['times']
 
-        pred, gt = np.array(pred), np.array(gt)
+        pred, gt = np.array(pred), np.array(gt) / duration
+        pred = pred[np.argsort(pred[:, 2])]
+        pred = pred[::-1]
         gt = np.expand_dims(gt, axis=0)
 
         iou = get_iou(pred, gt, duration)
-        iou = np.sort(iou[::-1])
 
         max_iou_dict.append(iou[0])
-
         for i, t in enumerate(tious):
             for j, r in enumerate(recalls):
                 eval_result[i][j].append((iou > t)[:r].any())
