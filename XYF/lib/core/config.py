@@ -81,10 +81,11 @@ cfg.LOSS.PARAMS = None
 cfg.TEST = edict()
 cfg.TEST.RECALL = []
 cfg.TEST.TIOU = []
-cfg.TEST.NMS_THRESH = 0.4
 cfg.TEST.BATCH_SIZE = 1
+cfg.TEST.NMS_THRESH = 0.4
 cfg.TEST.TOP_K = 10
 cfg.TEST.EVAL_TRAIN = False
+cfg.TEST.SCORE_SORT = True
 
 
 def _update_dict(cfg, value):

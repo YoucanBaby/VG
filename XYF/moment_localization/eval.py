@@ -42,11 +42,16 @@ def evaluate(preds, annotations):
         gt = data['times']
 
         pred, gt = np.array(pred), np.array(gt) / duration
-        pred = pred[np.argsort(pred[:, 2])]
-        pred = pred[::-1]
         gt = np.expand_dims(gt, axis=0)
 
-        iou = get_iou(pred, gt, duration)
+        if cfg.TEST.SCORE_SORT:
+            pred = pred[np.argsort(pred[:, 2])]
+            pred = pred[::-1]
+            iou = get_iou(pred, gt, duration)
+        else:
+            iou = get_iou(pred, gt, duration)
+            iou = np.sort(iou)
+            iou = iou[::-1]
 
         max_iou_dict.append(iou[0])
         for i, t in enumerate(tious):
