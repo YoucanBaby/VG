@@ -1,13 +1,13 @@
 import torch
-from einops import rearrange
-from timm.models.layers import trunc_normal_
 from torch import nn
-from einops import rearrange, repeat, reduce
+from einops import reduce
 
-from lib.models.attention import SelfAttention
+from lib.models.utils.attention import SelfAttention
 
 
 class MLP(nn.Module):
+    '''用于测试输入和输出
+    '''
 
     def __init__(self, cfg):
         super(MLP, self).__init__()

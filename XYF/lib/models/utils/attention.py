@@ -5,10 +5,26 @@ from timm.models.layers import DropPath
 from einops import rearrange
 
 
+class LinearWithMask(nn.Module):
+    def __init__(self, in_dim, out_dim):
+        super().__init__()
+        self.linear = nn.Linear(in_dim, out_dim)
+
+    def forward(self, x, mask):
+        ''' 要求input的下方padding都是0, i_h >= m_h
+        :param x: torch.size([b, i_h, w])
+        :param mask: torch.size([b, m_h, w])
+        :return: torch.size([b, i_h, w])
+        '''
+        b, m_h, m_w = mask.shape
+        x[:, :m_h] = self.linear(x[:, :m_h])
+        return x
+
+
 class MLP(nn.Module):
     def __init__(self, dim, mlp_ratio=4, dropout=0.):
         super().__init__()
-        self.net = nn.Sequential(
+        self.mlp = nn.Sequential(
             nn.Linear(dim, dim * mlp_ratio),
             nn.GELU(),
             nn.Dropout(dropout),
@@ -16,8 +32,13 @@ class MLP(nn.Module):
             nn.Dropout(dropout)
         )
 
-    def forward(self, x):
-        return self.net(x)
+    def forward(self, x, mask=None):
+        if mask:
+            b, m_h, m_w = mask.shape
+            x[:, :m_h] = self.mlp(x[:, :m_h])
+        else:
+            x = self.mlp(x)
+        return x
 
 
 class Attention(nn.Module):
@@ -76,7 +97,11 @@ class CrossAttention(nn.Module):
         )
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
 
-    def forward(self, q, kv):
+    def forward(self, q, kv, mask=None):
+        if mask:
+            b, m_h, m_w = mask.shape
+            kv = kv[:, :m_h]
+
         q, kv = self.q_norm(q), self.kv_norm(kv)
         x = q + self.drop_path(self.attention(q, kv))
         x = x + self.drop_path(self.mlp(x))
@@ -96,7 +121,17 @@ class SelfAttention(nn.Module):
         )
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
 
-    def forward(self, x):
+    def forward(self, x, mask=None):
+        if mask:
+            b, m_h, m_w = mask.shape
+            x_temp = x
+            x = x[:, :m_h]
+
         x = x + self.drop_path(self.attention(x))
         x = x + self.drop_path(self.mlp(x))
+
+        if mask:
+            x_temp[:, :m_h] = x
+            return x_temp
+
         return x

@@ -30,15 +30,15 @@ class GTR(nn.Module):
             nn.init.constant_(m.bias, 0)
             nn.init.constant_(m.weight, 1.0)
 
-    def forward(self, visual_input, textual_input, visual_mask, textual_mask):
-        # visual_input.shape: [B, 8416, 1024], textual_input.shape: [B, 46, 300],
+    def forward(self, v_input, v_mask, t_input, t_mask):
+        # v_input.shape: [B, 8416, 1024], t_input.shape: [B, 46, 300],
 
         # TODO 为什么输出的每一列的值都一样?
 
-        v_f = self.visual_encoder(visual_input)
+        v_f = self.visual_encoder(v_input)
         # v_f.shape: [B, 不定长, 384]
 
-        t_f = self.text_encoder(textual_input)
+        t_f = self.text_encoder(t_input)
         # t_f.shape: [B, 不定长, 384]
 
         latent = self.decoder(v_f, t_f)

@@ -2,13 +2,9 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from fvcore.nn import flop_count, FlopCountAnalysis, flop_count_str
-
-import _init_paths
 import os
 import pprint
 import argparse
-import numpy as np
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
@@ -19,13 +15,12 @@ from tqdm import tqdm
 
 import eval
 from eval import nms
-from pathlib import Path
 
 from lib.datasets.dataset import MomentLocalizationDataset
 from lib.core.config import cfg, update_config
 from lib.core.utils import AverageMeter, create_logger
 import lib.models as models
-import lib.models.loss as loss
+import lib.models.utils.loss as loss
 
 
 def parse_args():

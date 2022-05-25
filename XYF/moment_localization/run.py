@@ -2,7 +2,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import _init_paths
 import os
 import pprint
 import argparse
@@ -11,55 +10,61 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 import torch.optim as optim
-import torch.nn.functional as F
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
-from fvcore.nn import flop_count, FlopCountAnalysis, flop_count_str
+from fvcore.nn import flop_count
 import math
 
 import eval
-from pathlib import Path
 
 from lib.datasets.dataset import MomentLocalizationDataset
 from lib.core.config import cfg, update_config
 from lib.core.utils import AverageMeter, create_logger
-from lib.utils.comm import synchronize, get_rank, cleanup
+from lib.utils.comm import synchronize
 import lib.models as models
-import lib.models.loss as loss
+import lib.models.utils.loss as loss
 
 
 def collate_fn(batch):
-    batch_anno_idxs = [b['anno_idx'] for b in batch]
-    batch_video_ids = [b['video_id'] for b in batch]
+    batch_anno_idx = [b['anno_idx'] for b in batch]
+    batch_video_id = [b['video_id'] for b in batch]
     batch_duration = [b['duration'] for b in batch]
-    batch_descriptions = [b['description'] for b in batch]
-    batch_video_features = [b['video_features'] for b in batch]
-    batch_text_features = [b['text_features'] for b in batch]
-    batch_ground_truths = [b['ground_truth'] for b in batch]
-    batch_video_mask = [b['video_mask'] for b in batch]
-    batch_text_mask = [b['text_mask'] for b in batch]
+    batch_description = [b['description'] for b in batch]
+
+    batch_v_feature = [b['v_feature'] for b in batch]
+    batch_v_mask = [b['v_mask'] for b in batch]
+    batch_t_feature = [b['t_feature'] for b in batch]
+    batch_t_mask = [b['t_mask'] for b in batch]
+
+    batch_gt = [b['gt'] for b in batch]
 
     batch_data = {
-        'batch_anno_idxs': batch_anno_idxs,
-        'batch_video_ids': batch_video_ids,
+        'batch_anno_idx': batch_anno_idx,
+        'batch_video_id': batch_video_id,
         'batch_duration': batch_duration,
-        'batch_descriptions': batch_descriptions,
-        'batch_video_features': nn.utils.rnn.pad_sequence(batch_video_features, batch_first=True),
-        'batch_text_features': nn.utils.rnn.pad_sequence(batch_text_features, batch_first=True),
-        'batch_ground_truths': batch_ground_truths
+        'batch_description': batch_description,
+
+        'batch_v_feature': nn.utils.rnn.pad_sequence(batch_v_feature, batch_first=True),
+        'batch_v_mask': batch_v_mask,
+        'batch_t_feature': nn.utils.rnn.pad_sequence(batch_t_feature, batch_first=True),
+        'batch_t_mask': batch_t_mask,
+
+        'batch_gt': batch_gt
     }
     return batch_data
 
 
 def network(sample, model, optimizer=None):
     duration = sample['batch_duration']
-    visual_input = sample['batch_video_features']
-    textual_input = sample['batch_text_features']
-    gt = sample['batch_ground_truths']
-    visual_mask = sample['batch_video_mask']
-    textual_mask = sample['batch_text_mask']
+    gt = sample['batch_gt']
 
-    preds = model(visual_input, textual_input, visual_mask, textual_mask)
+    v_input = sample['batch_v_feature']
+    v_mask = sample['batch_v_mask']
+
+    t_input = sample['batch_t_feature']
+    t_mask = sample['batch_t_mask']
+
+    preds = model(v_input, v_mask, t_input, t_mask)
     loss_dict = getattr(loss, cfg.LOSS.NAME)(preds, gt, duration)
     loss_value = loss_dict['loss']
 

@@ -1,8 +1,6 @@
 import torch
-from timm.models.layers import trunc_normal_
 from torch import nn
-from lib.models.attention import SelfAttention, CrossAttention, Attention
-from einops import rearrange, repeat, reduce
+from einops import reduce
 
 
 class FFN(nn.Module):

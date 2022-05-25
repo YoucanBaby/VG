@@ -155,19 +155,19 @@ class MomentLocalizationDataset(DatasetBase):
         video_id = self.annotations[index]['video']
         duration = self.annotations[index]['duration']
         description = self.annotations[index]['description']
-        video_features, vis_mask = self.get_video_features(video_id)
-        text_features, txt_mask = self.get_sentence_features(description)
-        ground_truth = self.annotations[index]['times']
+        v_feature, v_mask = self.get_video_features(video_id)
+        t_feature, t_mask = self.get_sentence_features(description)
+        gt = self.annotations[index]['times']
 
-        # video_features, vis_mask填充为[8416, 384]
-        num_tokens = video_features.shape[0]
-        video_features = F.pad(video_features, [0, 0, 0, self.cfg.MAX_VIS_TOKENS - num_tokens])
-        # vis_mask = F.pad(vis_mask, [0, 0, 0, self.cfg.MAX_VIS_TOKENS - num_tokens], value=-100.0)
+        # v_feature, vis_mask填充为[8416, 384]
+        num_tokens = v_feature.shape[0]
+        v_feature = F.pad(v_feature, [0, 0, 0, self.cfg.MAX_VIS_TOKENS - num_tokens])
+        # v_mask = F.pad(v_mask, [0, 0, 0, self.cfg.MAX_VIS_TOKENS - num_tokens], value=-100.0)
 
-        # text_features, txt_mask填充为[46, 300]
-        num_tokens = text_features.shape[0]
-        text_features = F.pad(text_features, [0, 0, 0, self.cfg.MAX_TXT_TOKENS - num_tokens])
-        # txt_mask = F.pad(txt_mask, [0, 0, 0, self.cfg.MAX_TXT_TOKENS - num_tokens], value=-100.0)
+        # t_feature, txt_mask填充为[46, 300]
+        num_tokens = t_feature.shape[0]
+        t_feature = F.pad(t_feature, [0, 0, 0, self.cfg.MAX_TXT_TOKENS - num_tokens])
+        # t_mask = F.pad(t_mask, [0, 0, 0, self.cfg.MAX_TXT_TOKENS - num_tokens], value=-100.0)
 
         item = {
             'anno_idx': index,
@@ -175,13 +175,13 @@ class MomentLocalizationDataset(DatasetBase):
             'duration': duration,
             'description': description,
 
-            'video_features': video_features,
-            'video_mask': vis_mask,
+            'v_feature': v_feature,
+            'v_mask': v_mask,
 
-            'text_features': text_features,
-            'text_mask': txt_mask,
+            't_feature': t_feature,
+            't_mask': t_mask,
 
-            'ground_truth': ground_truth
+            'gt': gt
         }
         return item
 
@@ -190,7 +190,7 @@ if __name__ == '__main__':
     file_path = os.path.join('data/TACoS', '{}.hdf5'.format('vgg_fc7'))
 
     # 查看视频最大token
-    if True:
+    if False:
         max_tokens = 0
         with open(os.path.join('data/TACoS', 'train.json')) as json_file:
             annotation = json.load(json_file)

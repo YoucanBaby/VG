@@ -1,8 +1,8 @@
 import torch
 from timm.models.layers import trunc_normal_
 from torch import nn
-from lib.models.attention import SelfAttention, CrossAttention, Attention
-from einops import rearrange, repeat, reduce
+from lib.models.utils.attention import CrossAttention, Attention
+from einops import repeat
 
 
 class Sequential(nn.Module):
