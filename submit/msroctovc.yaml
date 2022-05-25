@@ -1,4 +1,4 @@
-description: xyf-i3d-adam1
+description: GTR
 
 target:
   service: sing
@@ -22,7 +22,7 @@ code:
   local_dir: $CONFIG_DIR/../
 
 jobs:
- - name: xyf-i3d-adam1
+ - name: GTR
    sku: G8-V100
    command:
      - echo ready!
