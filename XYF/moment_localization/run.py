@@ -224,13 +224,13 @@ def train(cfg, verbose):
 
     # print FLOPs and Parameters
     if True:
-        video_feature_input = torch.zeros([1, 768, 1024], device=device)
-        text_feature_input = torch.zeros([1, 28, 300], device=device)
-        count_dict, *_ = flop_count(model, (video_feature_input, text_feature_input))
+        v_feat, v_mask = torch.zeros([1, 768, 1024], device=device), torch.zeros([1, 1024, 1024], device=device)
+        t_feat, t_mask = torch.zeros([1, 46, 300], device=device), torch.zeros([1, 26, 300], device=device)
+        count_dict, *_ = flop_count(model, (v_feat, v_mask, t_feat, t_mask))
         count = sum(count_dict.values())
         n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
-        # logger.info(flop_count_str(FlopCountAnalysis(model, (video_feature_input, text_feature_input))))
+        # logger.info(flop_count_str(FlopCountAnalysis(model, (v_feat, t_feat))))
         logger.info('{:<30}  {:.1f} GFlops'.format('number of FLOPs: ', count))
         logger.info('{:<30}  {:.1f} MB'.format('number of params: ', n_parameters / 1000 ** 2))
 

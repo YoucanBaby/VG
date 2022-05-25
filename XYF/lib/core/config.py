@@ -33,6 +33,8 @@ cfg.DATASET.NUM_FRAMES = 256
 cfg.DATASET.SPLIT = ''
 cfg.DATASET.NORMALIZE = True
 cfg.DATASET.FPS = 25
+cfg.DATASET.MAX_VIS_TOKENS = 0
+cfg.DATASET.MAX_TXT_TOKENS = 0
 
 # grounding model related params
 cfg.MODEL = edict()

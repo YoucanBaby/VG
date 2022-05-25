@@ -23,7 +23,7 @@ class LinearWithMask(nn.Module):
 
 class MLP(nn.Module):
     def __init__(self, dim, mlp_ratio=4, dropout=0.):
-        super().__init__()
+        super(MLP, self).__init__()
         self.mlp = nn.Sequential(
             nn.Linear(dim, dim * mlp_ratio),
             nn.GELU(),
@@ -33,7 +33,7 @@ class MLP(nn.Module):
         )
 
     def forward(self, x, mask=None):
-        if mask:
+        if mask is not None:
             b, m_h, m_w = mask.shape
             x[:, :m_h] = self.mlp(x[:, :m_h])
         else:
@@ -98,7 +98,7 @@ class CrossAttention(nn.Module):
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
 
     def forward(self, q, kv, mask=None):
-        if mask:
+        if mask is not None:
             b, m_h, m_w = mask.shape
             kv = kv[:, :m_h]
 
@@ -122,7 +122,7 @@ class SelfAttention(nn.Module):
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
 
     def forward(self, x, mask=None):
-        if mask:
+        if mask is not None:
             b, m_h, m_w = mask.shape
             x_temp = x
             x = x[:, :m_h]
@@ -130,7 +130,7 @@ class SelfAttention(nn.Module):
         x = x + self.drop_path(self.attention(x))
         x = x + self.drop_path(self.mlp(x))
 
-        if mask:
+        if mask is not None:
             x_temp[:, :m_h] = x
             return x_temp
 

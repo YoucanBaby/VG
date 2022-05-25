@@ -13,21 +13,22 @@ from lib.models.utils.attention import MLP, SelfAttention, CrossAttention
 
 class Encoder(nn.Module):
     def __init__(self, num_tokens, in_dim, dim=384, depth=2):
-        super().__init__()
-        self.dim = dim
-
-        self.mlp = MLP(in_dim, dim)
+        super(Encoder, self).__init__()
+        self.linear = nn.Linear(in_dim, dim)
         self.sa_block = nn.ModuleList([SelfAttention(dim) for _ in range(depth)])
 
         self.pos_embed = nn.Parameter(torch.zeros(num_tokens, dim))
         trunc_normal_(self.pos_embed, std=.02)
 
-    def forward(self, x, mask):
+    def forward(self, x, mask=None):
         b, *_ = x.shape
-        pos_embed = repeat(self.pos_embed, "... -> b ...", b=b)
+        device = x.device
+        pos_embed = repeat(self.pos_embed, "... -> b ...", b=b, device=device)
+
+        x = self.linear(x)
+
         x = x + pos_embed
 
-        x = self.mlp(x, mask)
         for sa in self.sa_block:
             x = sa(x, mask)
         return x
@@ -95,7 +96,7 @@ class XYF(nn.Module):
         super(XYF, self).__init__()
         self.cfg = cfg
 
-        self.v_encoder = Encoder(num_tokens=8416, in_dim=1024)
+        self.v_encoder = Encoder(num_tokens=768, in_dim=1024)
         self.t_encoder = Encoder(num_tokens=46, in_dim=300)
         self.decoder = Decoder()
         self.prediction = Prediction()
