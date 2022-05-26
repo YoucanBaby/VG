@@ -36,6 +36,7 @@ def evaluate(preds, annotations):
 
     eval_result = [[[] for _ in recalls] for _ in tious]
     max_iou_dict = []
+    count = 0
 
     for pred, data in zip(preds, annotations):
         duration = data['duration']
@@ -57,6 +58,10 @@ def evaluate(preds, annotations):
         for i, t in enumerate(tious):
             for j, r in enumerate(recalls):
                 eval_result[i][j].append((iou > t)[:r].any())
+
+        if count % 2000 == 0:
+            print(iou)
+        count += 1
 
     eval_result = np.array(eval_result).mean(axis=-1)
 

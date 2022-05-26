@@ -7,9 +7,8 @@
     <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="复现GTR">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/XYF.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/XYF.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/core/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/core/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/moment_localization/eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/eval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/submit/msroctovc.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/submit/msroctovc.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,14 +101,8 @@
       <workItem from="1653384728230" duration="5243000" />
       <workItem from="1653392179444" duration="3100000" />
       <workItem from="1653497303061" duration="23000" />
-      <workItem from="1653497348194" duration="13147000" />
-    </task>
-    <task id="LOCAL-00006" summary="2022.05.16">
-      <created>1652646841813</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1652646841813</updated>
+      <workItem from="1653497348194" duration="15013000" />
+      <workItem from="1653532548519" duration="725000" />
     </task>
     <task id="LOCAL-00007" summary="2022.05.16">
       <created>1652647578772</created>
@@ -447,7 +440,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653509367479</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="复现GTR">
+      <created>1653512470032</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1653512470032</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
