@@ -111,20 +111,21 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
 
         if cur_iter % 30 == 0:
             pass
-            # message = 'lr: {:.7f}; '.format(optimizer.param_groups[0]['lr'])
-            # message += 'avg_loss: {:.2f}; '.format(loss_meter.avg)
-            # message += 'score: {:.2f}; '.format(score_meter.avg)
-            # message += 'l1_loss: {:.2f}; '.format(l1_loss_meter.avg)
-            # message += 'iou_loss: {:.2f}'.format(iou_loss_meter.avg)
-            # print(message)
-            #
-            # sorted_annotations = [annotations[key] for key in sorted(preds_dict.keys())]
-            # sorted_preds = [preds_dict[key] for key in sorted(preds_dict.keys())]
-            # result = eval.evaluate(sorted_preds, sorted_annotations)
-            # table_message = eval.display_results(result, 'performance on training set')
-            # print(table_message)
+            message = 'lr: {:.7f}; '.format(optimizer.param_groups[0]['lr'])
+            message += 'avg_loss: {:.2f}; '.format(loss_meter.avg)
+            message += 'score: {:.2f}; '.format(score_meter.avg)
+            message += 'l1_loss: {:.2f}; '.format(l1_loss_meter.avg)
+            message += 'iou_loss: {:.2f}'.format(iou_loss_meter.avg)
+            print(message)
 
-            # print('preds: {}'.format(preds[:2, :4, :]))
+            sorted_annotations = [annotations[key] for key in sorted(preds_dict.keys())]
+            sorted_preds = [preds_dict[key] for key in sorted(preds_dict.keys())]
+            result = eval.evaluate(sorted_preds, sorted_annotations)
+            table_message = eval.display_results(result, 'performance on training set')
+            print(table_message)
+
+            print('preds[0, :3, :]: {}'.format(preds[0, :3, :]))
+            print('preds[6, :3, :]: {}'.format(preds[6, :3, :]))
 
         if args.debug:
             return
