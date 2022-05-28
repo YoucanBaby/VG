@@ -2,7 +2,7 @@
 
 ## Framework
 
-![image-20220520143116048](https://xyf-image.oss-cn-beijing.aliyuncs.com/img/202205201431632.png)
+![image-20220529022814827](https://xyf-image.oss-cn-beijing.aliyuncs.com/img/202205290228913.png)
 
 ![image-20220529021018433](https://xyf-image.oss-cn-beijing.aliyuncs.com/img/202205290210499.png)
 
