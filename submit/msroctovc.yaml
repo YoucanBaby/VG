@@ -1,4 +1,4 @@
-description: GTR
+description: GTR-v3
 
 target:
   service: sing
@@ -22,7 +22,7 @@ code:
   local_dir: $CONFIG_DIR/../
 
 jobs:
- - name: GTR
+ - name: GTR-v3
    sku: G1-V100
    command:
      - echo ready!

@@ -7,10 +7,6 @@
     <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="Add README.md">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/XYF.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/XYF.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/core/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/core/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/models/XYF.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/XYF.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/lib/models/utils/loss.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/lib/models/utils/loss.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/submit/msroctovc.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/submit/msroctovc.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -105,14 +101,7 @@
       <workItem from="1653392179444" duration="3100000" />
       <workItem from="1653497303061" duration="23000" />
       <workItem from="1653497348194" duration="15013000" />
-      <workItem from="1653532548519" duration="21238000" />
-    </task>
-    <task id="LOCAL-00012" summary="2022.05.16">
-      <created>1652673872948</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1652673872948</updated>
+      <workItem from="1653532548519" duration="22220000" />
     </task>
     <task id="LOCAL-00013" summary="2022.05.16">
       <created>1652674306117</created>
@@ -450,7 +439,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653762506203</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="Add README.md">
+      <created>1653768810484</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1653768810484</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
