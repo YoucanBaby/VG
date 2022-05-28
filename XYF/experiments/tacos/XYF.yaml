@@ -39,7 +39,7 @@ TEST:
   BATCH_SIZE: 64
   RECALL: [1,5]
   TIOU: [0.1,0.3,0.5,0.7]
-  SCORE_SORT: False
+  SCORE_SORT: True
 
 LOSS:
   NAME: many_to_one_loss
