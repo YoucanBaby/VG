@@ -110,7 +110,6 @@ def train_epoch(train_loader, model, optimizer, verbose=False):
         )
 
         if cur_iter % 30 == 0:
-            pass
             message = 'lr: {:.7f}; '.format(optimizer.param_groups[0]['lr'])
             message += 'avg_loss: {:.2f}; '.format(loss_meter.avg)
             message += 'score: {:.2f}; '.format(score_meter.avg)

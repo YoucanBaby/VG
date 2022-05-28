@@ -1,4 +1,4 @@
-description: XYF-v2
+description: GTR
 
 target:
   service: sing
@@ -22,13 +22,13 @@ code:
   local_dir: $CONFIG_DIR/../
 
 jobs:
- - name: XYF-v2
-   sku: G8-V100
+ - name: GTR
+   sku: G1-V100
    command:
-#     - echo ready!
-#     - echo ready!!
-#     - echo ready!!!
-#     - sleep 1d
+     - echo ready!
+     - echo ready!!
+     - echo ready!!!
+     - sleep 1d
      - cd /tmp/code/XYF/data
      - wget -c https://azcopyvnext.azureedge.net/release20211027/azcopy_linux_amd64_10.13.0.tar.gz
      - tar -xzvf azcopy_linux_amd64_10.13.0.tar.gz

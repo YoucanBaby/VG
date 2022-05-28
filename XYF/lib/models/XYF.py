@@ -5,6 +5,7 @@ from torch import nn
 import torch.nn.functional as F
 import random
 
+from lib.core.config import cfg
 from lib.models.utils.attention import SelfAttention, CrossAttention
 from lib.models.utils.prediction import Prediction
 
@@ -66,7 +67,7 @@ class Decoder(nn.Module):
         self.ca = CrossAttention(dim, dim)
 
         self.pos_embed = nn.Parameter(torch.zeros(396, dim))
-        self.latent = nn.Parameter(torch.zeros(100, dim))
+        self.latent = nn.Parameter(torch.zeros(cfg.MODEL.PRED_HEADS, dim))
         self._init_parameters()
 
     def _init_parameters(self):

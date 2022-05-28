@@ -49,7 +49,8 @@ def get_best_pred(preds, gt, duration):
         iou = _iou(pred, gt).clamp(0).add(1e-8).clamp(0, 1)
         iou_loss = cost_iou * (- torch.log(iou))
 
-        loss = - score + l1_loss + iou_loss
+        # loss = -score + l1_loss + iou_loss
+        loss = -score + l1_loss + iou_loss
 
         # message = 'score: {}'.format(torch.max(score))
         # message += 'l1_loss: {}'.format(torch.max(l1_loss))
@@ -96,7 +97,7 @@ class SetLoss(nn.Module):
 
     def iou_loss(self, pred, gt):
         iou = self.iou(pred, gt)
-        iou = iou.add(1e-2).clamp(0, 1)
+        iou = iou.add(1e-2).clamp(1e-3, 1)
         return -torch.log(iou)
 
     def forward(self, score, pred, gt):
@@ -107,6 +108,7 @@ class SetLoss(nn.Module):
         iou_loss = self.cost_iou * self.iou_loss(pred, gt)
 
         if cfg.LOSS.PARAMS.USE_SCORE_LOSS:
+            # loss = -score_loss + l1_loss + iou_loss
             loss = -score_loss + l1_loss + iou_loss
         else:
             if cfg.LOSS.PARAM.USE_SCORE:
