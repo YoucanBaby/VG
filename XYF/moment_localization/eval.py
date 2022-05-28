@@ -59,9 +59,9 @@ def evaluate(preds, annotations):
             for j, r in enumerate(recalls):
                 eval_result[i][j].append((iou > t)[:r].any())
 
-        if count % 2000 == 0:
-            print(iou)
-        count += 1
+        # if count % 2000 == 0:
+        #     print(iou)
+        # count += 1
 
     eval_result = np.array(eval_result).mean(axis=-1)
 

@@ -5,9 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="复现GTR">
+      <change afterPath="$PROJECT_DIR$/2D-TAN/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/2D-TAN/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/GTR.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/moment_localization/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/img.png" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/data/image/img.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XYF/moment_localization/eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/eval.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submit/msroctovc.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/submit/msroctovc.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,11 +81,11 @@
       <recent name="C:\Users\v-yifangxu\PycharmProjects\VG\XYF" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\v-yifangxu\PycharmProjects\VG\2D-TAN" />
+      <recent name="C:\Users\v-yifangxu\PycharmProjects\VG\submit" />
+      <recent name="C:\Users\v-yifangxu\PycharmProjects\VG\XYF\data\image" />
       <recent name="F:\PyCharmProjects\VG\XYF\lib\models\utils" />
       <recent name="C:\Users\v-yifangxu\PycharmProjects\VG\XYF\lib\models" />
-      <recent name="C:\Users\v-yifangxu\PycharmProjects\VG\XYF\lib\models\tan" />
-      <recent name="C:\Users\v-yifangxu\PycharmProjects\VG\XYF\lib\models\gtr" />
-      <recent name="C:\Users\v-yifangxu\PycharmProjects\VG" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -101,14 +106,7 @@
       <workItem from="1653392179444" duration="3100000" />
       <workItem from="1653497303061" duration="23000" />
       <workItem from="1653497348194" duration="15013000" />
-      <workItem from="1653532548519" duration="7823000" />
-    </task>
-    <task id="LOCAL-00008" summary="2022.05.16">
-      <created>1652647751776</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1652647751776</updated>
+      <workItem from="1653532548519" duration="14681000" />
     </task>
     <task id="LOCAL-00009" summary="2022.05.16">
       <created>1652665290678</created>
@@ -446,7 +444,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653536483339</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="复现GTR">
+      <created>1653551343609</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1653551343609</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
