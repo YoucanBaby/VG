@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="复现GTR">
-      <change afterPath="$PROJECT_DIR$/2D-TAN/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/2D-TAN/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/img.png" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/data/image/img.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/moment_localization/eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/moment_localization/eval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/submit/msroctovc.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/submit/msroctovc.yaml" afterDir="false" />
-    </list>
+    <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="Add README.md" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -106,14 +97,7 @@
       <workItem from="1653392179444" duration="3100000" />
       <workItem from="1653497303061" duration="23000" />
       <workItem from="1653497348194" duration="15013000" />
-      <workItem from="1653532548519" duration="14681000" />
-    </task>
-    <task id="LOCAL-00009" summary="2022.05.16">
-      <created>1652665290678</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1652665290678</updated>
+      <workItem from="1653532548519" duration="14745000" />
     </task>
     <task id="LOCAL-00010" summary="2022.05.16">
       <created>1652668071792</created>
@@ -451,7 +435,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653551343609</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="Add README.md">
+      <created>1653762227469</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1653762227469</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -493,7 +484,8 @@
     <MESSAGE value="2022.05.24" />
     <MESSAGE value="2022.05.25" />
     <MESSAGE value="复现GTR" />
-    <option name="LAST_COMMIT_MESSAGE" value="复现GTR" />
+    <MESSAGE value="Add README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add README.md" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

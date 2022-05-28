@@ -1,7 +1,7 @@
 # VG
 This is a project for Video Grounding. 
 
-![img.png](submit/video grounding.png)
+![image-20220505192628859](https://xyf-image.oss-cn-beijing.aliyuncs.com/img/202205051926955.png)
 
 Video Grounding, also known as Video Moment Retrieval, Temporal Sentence Grounding in Videos. 
 
