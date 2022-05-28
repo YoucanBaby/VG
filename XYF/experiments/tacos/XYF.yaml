@@ -22,7 +22,7 @@ DATASET:
 OPTIM:
   NAME: AdamW
   PARAMS:
-    LR: 0.000025
+    LR: 0.00001
     WEIGHT_DECAY: 0.001
 
 LR_SCHEDULER:
@@ -39,7 +39,7 @@ TEST:
   BATCH_SIZE: 64
   RECALL: [1,5]
   TIOU: [0.1,0.3,0.5,0.7]
-  SCORE_SORT: True
+  SCORE_SORT: False
 
 LOSS:
   NAME: many_to_one_loss
