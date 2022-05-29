@@ -51,6 +51,6 @@ LOSS:
 
 MODEL:
   NAME: XYF
-  PRED_HEADS: 5
+  PRED_HEADS: 10
 
 
