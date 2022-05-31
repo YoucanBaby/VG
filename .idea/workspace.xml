@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df18f961-9710-42db-ae4e-f242cc3b867f" name="Changes" comment="Add README.md">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/XYF/experiments/tacos/XYF.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/XYF/experiments/tacos/XYF.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +61,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/XYF/experiments/tacos" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../deit" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -100,14 +100,7 @@
       <workItem from="1653392179444" duration="3100000" />
       <workItem from="1653497303061" duration="23000" />
       <workItem from="1653497348194" duration="15013000" />
-      <workItem from="1653532548519" duration="24015000" />
-    </task>
-    <task id="LOCAL-00016" summary="2022.05.16">
-      <created>1652679321046</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1652679321046</updated>
+      <workItem from="1653532548519" duration="26867000" />
     </task>
     <task id="LOCAL-00017" summary="2022.05.16">
       <created>1652680161468</created>
@@ -445,7 +438,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653770492885</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="Add README.md">
+      <created>1653791808985</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1653791808985</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
